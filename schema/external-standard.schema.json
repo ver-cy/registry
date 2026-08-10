@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.2/external-standard.schema.json",
+  "title": "External standard (one faceted external-registry row) v0.2",
+  "description": "Validates one row of external/external-standards.csv projected as a JSON object. External standards are the discoverable reference standards of the unified registry: many, faceted, and NOT MMDG nodes until instantiated by a future external-to-internal transform (out of scope here). Distinct from the internal meta-model record (registry-node.schema.json): an external standard carries the source catalogue columns plus the two facet axes, but not the MMDG node profile (no csn, role, exports, requires, sync_contract, edges). CSV-to-JSON field mapping is a fixed lower_snake_case transform of the source headers, which the import tool (tools/import_external.py) and CI (ci/check_facets.py) both follow: Group to group, Name to name, Acronym to acronym, SpecificationSourceURL to specification_source_url, Category to category, ParentModel to parent_model, SimilarModels to similar_models, Maintainer to maintainer, Format to format, Status to status, NamespaceURI to namespace_uri, Year to year, Notes to notes, CompositionalRole to compositional_role, DefaultLinkType to default_link_type. To the source columns the importer adds three facet fields: origin (const external), industry (the sector axis, inherited from the row's Group through facets/group-industry-map.csv, at least one code), and optional cluster (the ontological axis). Required: name, group, origin, industry. Every other field is optional because many source cells are blank. compositional_role binds to the ARCH-016 compositional roles R1 to R8 and default_link_type to their default link types; the role names, meanings and default link types are the single materialized vocabulary in facets/compositional-roles.yaml and facets/link-types.yaml and are cited by ID here, not restated. Cites ARCH-016, ARCH-017, ARCH-018.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "group", "origin", "industry"],
+  "properties": {
+    "group": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source column Group. The external-registry group the standard belongs to, one of the thirty-seven groups the source catalogue partitions into. The importer inherits industry from this value through facets/group-industry-map.csv. Required."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source column Name. Human-readable name of the standard. Required."
+    },
+    "acronym": {
+      "type": "string",
+      "description": "Source column Acronym. Short display acronym; may be empty in the source."
+    },
+    "specification_source_url": {
+      "type": "string",
+      "anyOf": [
+        { "format": "uri" },
+        { "maxLength": 0 }
+      ],
+      "description": "Source column SpecificationSourceURL. A URI to the authoritative specification, or the empty string when the source cell is blank. Format uri is an annotation; the empty-string case is the blank-cell case."
+    },
+    "category": {
+      "type": "string",
+      "description": "Source column Category. Free-text kind of artifact (Framework, Schema Language, Ontology, Format, and so on); may be empty."
+    },
+    "parent_model": {
+      "type": "string",
+      "description": "Source column ParentModel. The model this one derives from or specializes, as free text; may be empty or a dash in the source."
+    },
+    "similar_models": {
+      "type": "string",
+      "description": "Source column SimilarModels. Free-text list of related or comparable standards; may be empty."
+    },
+    "maintainer": {
+      "type": "string",
+      "description": "Source column Maintainer. The organization or body that maintains the standard; may be empty."
+    },
+    "format": {
+      "type": "string",
+      "description": "Source column Format. Free-text serialization or modeling form; may be empty."
+    },
+    "status": {
+      "type": "string",
+      "description": "Source column Status. Free-text maturity or standardization status (for example W3C Recommendation, ISO Standard, Draft); may be empty. This is the external catalogue status string, not the internal-node lifecycle vocabulary."
+    },
+    "namespace_uri": {
+      "type": "string",
+      "description": "Source column NamespaceURI. The canonical namespace URI where one exists; may be empty."
+    },
+    "year": {
+      "type": "string",
+      "description": "Source column Year. Publication or revision year as free text (single years, ranges, or slashed pairs such as 2004 / 2014 all occur), so it is a string, not a number; may be empty."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Source column Notes. Free-text editorial notes; may be empty."
+    },
+    "compositional_role": {
+      "type": "string",
+      "enum": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", ""],
+      "description": "Source column CompositionalRole. The ARCH-016 compositional role of the standard, one of R1 to R8, or empty when unclassified. The role names and meanings are the vocabulary in facets/compositional-roles.yaml, cited by ID here."
+    },
+    "default_link_type": {
+      "type": "string",
+      "enum": ["EMBED", "REFERENCE", "MIX-IN", "COMPOSE", "ALIGN", "EXTEND", "N/A", ""],
+      "description": "Source column DefaultLinkType. The ARCH-016 default link type implied by the compositional role; the role-to-link-type mapping and the link-type vocabulary live in facets/compositional-roles.yaml and facets/link-types.yaml, cited by ID here. The literal N/A is a valid value (R8 tooling with no default link); empty when unclassified."
+    },
+    "origin": {
+      "type": "string",
+      "const": "external",
+      "description": "Facet field added by the importer. Always external for an external-standards row: this record is a discovery entry for a standard authored outside the registry governance domain, not an internal meta-model node. Required."
+    },
+    "industry": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "description": "Facet field, the sector axis: which sector uses or governs the standard. At least one lower-kebab code from facets/industry.yaml (scheme vercy-industry). The importer inherits these from the row's Group through facets/group-industry-map.csv, which maps each of the thirty-seven source groups to one or more industry codes. Orthogonal to cluster. Required, minItems 1."
+    },
+    "cluster": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "activity-work",
+          "built-environment",
+          "civilization",
+          "economy",
+          "events-phenomena",
+          "flows-resources",
+          "knowledge-information",
+          "matter-artifacts",
+          "organizations",
+          "people-groups",
+          "planet-nature",
+          "polity",
+          "registries-ledgers",
+          "security-ownership-access",
+          "society"
+        ]
+      },
+      "description": "Optional facet field, the ontological axis: what the standard is, one or more of the fifteen ontological clusters (codes from facets/clusters.yaml). Optional for external standards in v0.2; the enum matches the cluster field of registry-node.schema.json. Orthogonal to industry."
+    }
+  }
+}

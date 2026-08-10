@@ -62,8 +62,16 @@ steward: AISMM maintainers
 sync_contract:
   mode: git
   freshness: PT24H
+# Facet axes (v0.2). industry: which sector uses or governs the model, codes from
+# facets/industry.yaml (vercy-industry). cluster: what the model is, codes from
+# facets/clusters.yaml (the fifteen world-models clusters). The two axes are
+# orthogonal. A software meta-model is foundation-and-semantics substrate applied
+# in the software and DevOps horizontal; as a thing it is knowledge-information.
 industry:
-  - software
+  - foundation-semantics
+  - software-devops
+cluster:
+  - knowledge-information
 exports:
   - software-product
   - bundle

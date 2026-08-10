@@ -1,0 +1,159 @@
+# Vercy industry facet vocabulary
+#
+# The industry axis of the unified registry. It is ORTHOGONAL to the fifteen
+# ontological clusters (facets/clusters.yaml): a cluster says what a thing IS
+# (terrain, organization, payment), an industry says which sector of activity
+# uses or governs it. One entry may carry several industry codes.
+#
+# Two categories:
+#   vertical:   a sector of activity, aligned to an ISIC Rev.4 section for
+#               neutrality (ISIC is the UN global reference; NACE, NAICS and
+#               GICS map onto it). State and Polity is one vertical among many
+#               (government-public-sector), not a privileged axis.
+#   horizontal: a cross-cutting technical capability used across every sector
+#               (data interchange, identity, geospatial). Horizontal codes have
+#               no ISIC section because they are sector-agnostic.
+#
+# The scheme is swappable: entries reference codes by this scheme id, so a later
+# switch to raw ISIC, NACE or GICS is a re-map of this file plus the group map,
+# not a schema change.
+
+scheme: vercy-industry
+version: "0.1"
+description: >
+  Vercy industry facet: thirteen ISIC-aligned verticals and twelve cross-cutting
+  horizontals. Orthogonal to the ontological clusters. Multi-valued per entry.
+
+categories:
+  - vertical
+  - horizontal
+
+industries:
+  # --- Verticals (ISIC Rev.4 aligned) ---
+  - code: healthcare-life-sciences
+    label: Healthcare and life sciences
+    category: vertical
+    isic: Q
+    note: Clinical care, pharma, genomics, public health.
+  - code: financial-services
+    label: Financial services
+    category: vertical
+    isic: K
+    note: Banking, insurance, payments, tax and audit, securities.
+  - code: manufacturing-industrial
+    label: Manufacturing and industry
+    category: vertical
+    isic: C
+    note: Discrete and process manufacturing, engineering, industrial data.
+  - code: construction-built-environment
+    label: Construction and the built environment
+    category: vertical
+    isic: F
+    note: Building information modeling, infrastructure, facilities.
+  - code: commerce-retail
+    label: Commerce and retail
+    category: vertical
+    isic: G
+    note: Product data, supply chain, point of sale, wholesale and retail trade.
+  - code: transport-logistics
+    label: Transport and logistics
+    category: vertical
+    isic: H
+    note: Aviation, maritime, rail, road, freight and passenger mobility.
+  - code: energy-utilities
+    label: Energy and utilities
+    category: vertical
+    isic: D-E
+    note: Power, gas, water, grid and metering.
+  - code: agriculture-food
+    label: Agriculture and food
+    category: vertical
+    isic: A
+    note: Farming, food production, environmental land use.
+  - code: telecommunications
+    label: Telecommunications
+    category: vertical
+    isic: J61
+    note: Networks, numbering, billing, roaming.
+  - code: media-entertainment
+    label: Media and entertainment
+    category: vertical
+    isic: J59-J60-R
+    note: Broadcast, publishing, music, advertising, content provenance.
+  - code: government-public-sector
+    label: Government and public sector
+    category: vertical
+    isic: O
+    note: Civic, legal, official statistics, tax administration. Polity and the
+      state sit here, one vertical among many.
+  - code: defense-security
+    label: Defense and public safety
+    category: vertical
+    isic: O84
+    note: Defense, intelligence, emergency and disaster response.
+  - code: education-skills
+    label: Education and skills
+    category: vertical
+    isic: P
+    note: Learning, qualifications, human resources and competencies.
+  - code: professional-scientific
+    label: Professional, scientific and research
+    category: vertical
+    isic: M
+    note: Research data, laboratories, chemistry and materials, scholarly output.
+  - code: hospitality-tourism
+    label: Hospitality and tourism
+    category: vertical
+    isic: I
+    note: Accommodation, food service, travel and hospitality operations.
+
+  # --- Horizontals (cross-cutting, sector-agnostic) ---
+  - code: foundation-semantics
+    label: Foundation and semantics
+    category: horizontal
+    note: Upper ontologies, the semantic web substrate, enterprise architecture
+      and modeling languages.
+  - code: data-interchange
+    label: Data interchange
+    category: horizontal
+    note: Serialization, APIs, schema and query languages, data formats.
+  - code: software-devops
+    label: Software and DevOps
+    category: horizontal
+    note: Build, packaging, CI, and software and security artifacts.
+  - code: identity-security-privacy
+    label: Identity, security and privacy
+    category: horizontal
+    note: Authentication, authorization, consent, privacy and governance.
+  - code: ai-data-governance
+    label: AI and data governance
+    category: horizontal
+    note: Machine learning artifacts, AI risk and model governance, data governance.
+  - code: iot-digital-twins
+    label: IoT and digital twins
+    category: horizontal
+    note: Devices, sensors, and the digital-twin and asset-shell standards.
+  - code: distributed-ledger
+    label: Distributed ledger and Web3
+    category: horizontal
+    note: Blockchain, tokens and decentralized identifiers.
+  - code: knowledge-metadata
+    label: Knowledge and metadata
+    category: horizontal
+    note: Library, cultural heritage, bibliographic and scholarly metadata.
+  - code: geospatial-temporal
+    label: Geospatial and temporal
+    category: horizontal
+    note: Coordinate systems, mapping, weather and earth observation, time.
+  - code: communication-collaboration
+    label: Communication and collaboration
+    category: horizontal
+    note: Calendaring, contacts, messaging and social protocols.
+  - code: sustainability-esg
+    label: Sustainability and ESG
+    category: horizontal
+    note: Environmental, social and governance reporting, climate disclosure.
+  - code: immersive-3d
+    label: Immersive and 3D
+    category: horizontal
+    note: 3D scenes, gaming, extended reality and robotics interchange.

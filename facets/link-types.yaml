@@ -1,0 +1,36 @@
+# Vercy link type facet vocabulary
+#
+# The link type is the composition mechanism by which an internal meta-model node
+# draws on an external standard (or another node). Each compositional role in
+# facets/compositional-roles.yaml carries a default link type from this set. The
+# mechanisms are defined in Meta-Model-Composition (ARCH-016); this file names
+# them and binds a one-line meaning to each. Bind by reference to ARCH-016.
+#
+# Six mechanisms (EMBED, REFERENCE, MIX-IN, COMPOSE, ALIGN, EXTEND) plus the
+# literal N/A for standards that are not composed at all (infrastructure, formats,
+# protocols and tooling under R8 that a node simply runs on or emits).
+
+scheme: vercy-link-type
+version: "0.2"
+source: ARCH-016
+description: >
+  Vercy link type facet: the six ARCH-016 composition mechanisms plus the literal
+  N/A. Each compositional role (R1 to R8) defaults to one of these link types.
+
+link_types:
+  - code: EMBED
+    meaning: Carry the external definition inline inside the node, as an owned part.
+  - code: REFERENCE
+    meaning: Cite the external standard by identifier without copying its content.
+  - code: MIX-IN
+    meaning: Overlay an orthogonal facet onto the node without changing its core.
+  - code: COMPOSE
+    meaning: Assemble the node from the external standard as one of several parts.
+  - code: ALIGN
+    meaning: Map the node to a foundational ontology or substrate, keeping both distinct.
+  - code: EXTEND
+    meaning: Build upon a schema language or base standard, adding to it. Used under
+      R8 for schema languages that a node specializes rather than merely references.
+  - code: "N/A"
+    meaning: No composition link; the standard is infrastructure, a format, a protocol
+      or tooling that the node runs on or emits rather than draws into its model.

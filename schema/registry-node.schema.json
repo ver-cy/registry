@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ver.cy/registry/schema/0.1/registry-node.schema.json",
-  "title": "Registry node (unified registry entry, superset profile)",
-  "description": "The unified registration record of the ELMM registry: the single home where the Meta-Universe registry entry (entry.schema.json, the B5 live register) and the MMDG node profile (mmdg-node.schema.json, the B3 dependency graph) converge into one file. An entry that validates against this schema carries BOTH the upstream-required registry fields (id, name, publisher, owner, version, kind, status, license, access, purpose, registered, and source when access is public) AND the MMDG profile fields (csn, primary_namespace, role, fingerprint, source, steward, sync_contract, exports, requires, display_alias, with optional industry, origin, provenance, routing_hints), so the same record serves discovery and composition at once. This schema is a superset: it inlines the upstream constraints (no remote references, so CI validates offline) and adds the profile constraints, and it does not forbid additional properties, so an entry projected to the upstream field set validates the upstream schema and the same entry validates the MMDG profile. The one lifecycle exception is status: the records carry the MMDG profile term active, which the upstream-field projection maps onto stable pending the upstream change request that adds active to the entry vocabulary. Identity is registry id plus Canonical Semantic Name (ARCH-003) with version per ARCH-002; the semantic pin is the Semantic Fingerprint per ARCH-009 over the MUIF canonical form, never a byte hash. The node-level role holds the triad core, landscape, kernel and is the MMDG-normative field; kind is the upstream registry scope class and is a projection of role (core maps to domain, landscape maps to enterprise, kernel maps to enterprise). The node-level role is distinct from the edge-level compositional_role, which binds to ARCH-016 roles R1 to R8. Every enumeration of concrete Core or Landscape models is illustrative and non-normative: the normative set is the registry contents. Cites ARCH-002, ARCH-003, ARCH-009, ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013.",
+  "$id": "https://ver.cy/registry/schema/0.2/registry-node.schema.json",
+  "title": "Registry node (unified registry entry, superset profile) v0.2",
+  "description": "The unified registration record of the ELMM registry: the single home where the Meta-Universe registry entry (entry.schema.json, the B5 live register) and the MMDG node profile (mmdg-node.schema.json, the B3 dependency graph) converge into one file. An entry that validates against this schema carries BOTH the upstream-required registry fields (id, name, publisher, owner, version, kind, status, license, access, purpose, registered, and source when access is public) AND the MMDG profile fields (csn, primary_namespace, role, fingerprint, source, steward, sync_contract, exports, requires, display_alias, with optional industry, origin, provenance, routing_hints), so the same record serves discovery and composition at once. This schema is a superset: it inlines the upstream constraints (no remote references, so CI validates offline) and adds the profile constraints, and it does not forbid additional properties, so an entry projected to the upstream field set validates the upstream schema and the same entry validates the MMDG profile. The one lifecycle exception is status: the records carry the MMDG profile term active, which the upstream-field projection maps onto stable pending the upstream change request that adds active to the entry vocabulary. Identity is registry id plus Canonical Semantic Name (ARCH-003) with version per ARCH-002; the semantic pin is the Semantic Fingerprint per ARCH-009 over the MUIF canonical form, never a byte hash. The node-level role holds the triad core, landscape, kernel and is the MMDG-normative field; kind is the upstream registry scope class and is a projection of role (core maps to domain, landscape maps to enterprise, kernel maps to enterprise). The node-level role is distinct from the edge-level compositional_role, which binds to ARCH-016 roles R1 to R8. Every enumeration of concrete Core or Landscape models is illustrative and non-normative: the normative set is the registry contents. Cites ARCH-002, ARCH-003, ARCH-009, ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013. v0.2 is an additive, backward-compatible extension: it keeps every v0.1 constraint and adds two optional facet fields over the two orthogonal facet axes of the unified registry, cluster (what a thing is, one of the fifteen ontological clusters, codes from facets/clusters.yaml) and a refined industry (which sector uses or governs it, codes from facets/industry.yaml, the vercy-industry scheme). Neither is required, so every v0.1 record still validates; a record gains its facets when they are added. The industry axis and the cluster axis are orthogonal, and government-public-sector is one industry vertical, not a privileged axis.",
   "type": "object",
   "properties": {
     "id": {
@@ -155,8 +155,35 @@
     },
     "industry": {
       "type": "array",
-      "items": { "type": "string" },
-      "description": "Optional industry facet for the registry, free vocabulary, lowercase. Profile field."
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "description": "Optional industry facet, the sector axis of the unified registry: which sector of activity uses or governs the model. Multi-valued. Items are lower-kebab codes drawn from facets/industry.yaml (scheme vercy-industry): fifteen ISIC-aligned verticals and twelve cross-cutting horizontals, twenty-seven codes. Orthogonal to cluster, which says what the thing is; government-public-sector is one vertical among many, not a privileged axis. External standards inherit industry from their Group through facets/group-industry-map.csv; internal meta-models declare it here. The pattern binds the code shape; the closed vocabulary lives in the facet file so a re-map to raw ISIC, NACE or GICS is a facet change, not a schema change. Profile field, optional (v0.2), so v0.1 records without it still validate."
+    },
+    "cluster": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "activity-work",
+          "built-environment",
+          "civilization",
+          "economy",
+          "events-phenomena",
+          "flows-resources",
+          "knowledge-information",
+          "matter-artifacts",
+          "organizations",
+          "people-groups",
+          "planet-nature",
+          "polity",
+          "registries-ledgers",
+          "security-ownership-access",
+          "society"
+        ]
+      },
+      "description": "Optional cluster facet, the ontological axis of the unified registry: what the thing is, one or more of the fifteen ontological clusters (codes from facets/clusters.yaml, mirroring the world-models cluster directories). Primary for internal meta-models; optional for external standards in v0.2. Orthogonal to industry, which says which sector uses or governs the thing. The enum is the closed set of fifteen cluster ids: activity-work, built-environment, civilization, economy, events-phenomena, flows-resources, knowledge-information, matter-artifacts, organizations, people-groups, planet-nature, polity, registries-ledgers, security-ownership-access, society. Profile field, optional (v0.2), so v0.1 records without it still validate."
     },
     "origin": {
       "type": "string",

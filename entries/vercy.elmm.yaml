@@ -47,6 +47,14 @@ steward: Vercy model stewards
 sync_contract:
   mode: git
   freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. The composition kernel is
+# foundation-and-semantics substrate; as a thing it composes enterprise
+# landscapes, organizations of models.
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
 exports:
   - model-registration-record
   - mmdg-edge

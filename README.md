@@ -4,7 +4,7 @@ The single home where every meta-model registers as one node and declares its ty
 
 - **The specification** lives in [ver-cy/elmm](https://github.com/ver-cy/elmm): the ELMM profile, the JSON Schemas, and the normative SHALL text. This repository is the running instance of that profile.
 - **Entry point for humans and agents:** [BOOTSTRAP.md](BOOTSTRAP.md), per the ARCH-017 traversal contract.
-- **Status:** v0.1.0, Working Draft. **License:** Apache-2.0.
+- **Status:** v0.2.0, Working Draft. **License:** Apache-2.0.
 
 ## What this repository is
 
@@ -16,6 +16,77 @@ The two class fields sit side by side and answer different questions. `role` is 
 
 What this repository is **not**: it is not a copy of any model. Registration is discovery, not storage. An entry references an authoritative source (the ARCH-018 master) and never inlines it. The models keep their own repositories, their own owners, their own release cadence. The registry holds identity, relationships, and the resolver that reads them; nothing else.
 
+## Two entry classes, two orthogonal facet axes
+
+Everything above describes the internal meta-models: the MMDG nodes, few and governed. As of v0.2 the repository is a unified registry with a second entry class alongside them, and two facet axes that classify both classes the same way.
+
+**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are four of them. An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by a future external-to-internal transform, which is deferred and out of scope here. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
+
+**The two axes are orthogonal, and both apply to both classes.** They answer different questions:
+
+- **Cluster: what a thing is.** The ontological kind of the entity, one of the fifteen clusters of the world-models corpus (`activity-work`, `built-environment`, `civilization`, `economy`, `events-phenomena`, `flows-resources`, `knowledge-information`, `matter-artifacts`, `organizations`, `people-groups`, `planet-nature`, `polity`, `registries-ledgers`, `security-ownership-access`, `society`). Cluster is the primary facet for internal meta-models and an optional facet for external standards in v0.2.
+- **Industry: which sector uses or governs it.** The sector of activity, drawn from the `vercy-industry` vocabulary: fifteen ISIC Rev.4 aligned verticals plus twelve cross-cutting horizontals, twenty-seven codes in all, multi-valued per entry. Every external standard inherits its industry codes from its Group; every internal meta-model declares its own in its entry file.
+
+The axes are independent by construction. A geospatial coordinate reference system is the same kind of thing (its cluster is fixed) whether it is applied in agriculture, aviation, or government (its industry set varies). And State and Polity is one vertical among many (`government-public-sector`) and one cluster among fifteen (`polity`), never a privileged frame: the registry treats the state as one domain of activity, not the axis the rest hangs from.
+
+### The facet vocabularies
+
+The controlled vocabularies live under `facets/`, and entries reference codes by scheme id so a vocabulary can be re-mapped without a schema change:
+
+| File | Scheme | What it is |
+|---|---|---|
+| `facets/clusters.yaml` | `vercy-cluster` | The fifteen ontological clusters. The "what a thing is" axis. Each code is the exact world-models directory id, so a cluster code resolves to its corpus home. |
+| `facets/industry.yaml` | `vercy-industry` | The fifteen ISIC-aligned verticals and twelve horizontals. The "which sector" axis. ISIC alignment is for neutrality (NACE, NAICS and GICS map onto ISIC); the vocabulary is swappable. |
+| `facets/group-industry-map.csv` | | Maps each of the 37 external-registry Groups to one or more industry codes. This is how external standards inherit industry from their Group, assigned once per Group rather than per row. |
+| `facets/compositional-roles.yaml` | `vercy-compositional-role` | The eight ARCH-016 compositional roles R1 to R8, each with its default link type and catalogue count. The role definitions are bound by reference to ARCH-016; this file is the single materialized vocabulary for them. |
+| `facets/link-types.yaml` | `vercy-link-type` | The ARCH-016 composition mechanisms (`EMBED`, `REFERENCE`, `MIX-IN`, `COMPOSE`, `ALIGN`, `EXTEND`) plus the literal `N/A`. |
+
+The last two vocabularies describe how a standard would compose, not what it is or which sector owns it. That classification is informative guidance: a role suggests a default link type, but an actual link is settled by the instantiation transform, not asserted here.
+
+### The external standards catalogue
+
+`external/external-standards.csv` is the discovery catalogue, generated, never hand-edited. It is `external/external-models.source.csv` (1180 authored rows, fifteen fixed columns) with two facet columns appended: `Origin` (the constant `external` for every row, so the origin facet reads uniformly across both classes) and `Industry` (the semicolon-joined vercy-industry codes inherited from the row's Group). The source rows also carry each standard's ARCH-016 `CompositionalRole` (R1 to R8) and `DefaultLinkType`, so the catalogue is queryable by how a standard would compose as well as by what sector uses it. See `external/README.md` for the column-by-column account. Each generated row validates against `schema/external-standard.schema.json`, a schema that is deliberately distinct from the internal node schema and carries none of the MMDG node profile: a reference is not a node, and the schemas say so.
+
+### Tooling: import, build_index, query
+
+Three small tools under `tools/`, each Python 3 (standard library plus PyYAML), each locating the registry root from its own file location, each deterministic (stable sort order, fixed dialects, no wall clock, no randomness), so every regenerated artifact is byte-identical:
+
+```
+external-models.source.csv + facets/group-industry-map.csv
+              |  tools/import_external.py
+              v
+     external/external-standards.csv        (source columns + Origin + Industry)
+              |
+              |  entries/*.yaml  +  facets/*
+              v  tools/build_index.py
+        index/unified-index.json            (one faceted index over BOTH classes)
+              |
+              |  tools/query.py
+              v
+        answers to facet queries
+```
+
+- `tools/import_external.py` builds the external catalogue. It fails closed if a source Group is missing from the Group map or a mapped code is not a known industry code.
+- `tools/build_index.py` builds `index/unified-index.json`, the single index that joins the four internal meta-models and the 1180 external standards into one structure keyed by the shared facets, so both classes are searchable together.
+- `tools/query.py` reads that index and answers facet queries. Representative invocations, with the query dimensions being cluster, industry, origin, and entry class:
+
+```
+python tools/import_external.py                          # regenerate the external catalogue
+python tools/build_index.py                              # regenerate the unified index
+python tools/query.py --cluster organizations            # every entry whose cluster is organizations
+python tools/query.py --industry financial-services      # everything in the financial-services sector
+python tools/query.py --origin internal --cluster organizations  # internal entries of one cluster
+python tools/query.py --industry government-public-sector # the state as one sector among many
+```
+
+### The unified index
+
+`index/unified-index.json` is the generated join over both entry classes: the four internal meta-models and the 1180 external standards, indexed by the shared facet axes (cluster, industry) plus origin, and, for external standards, the ARCH-016 compositional role (R1 to R8). The internal core, landscape, and kernel node role is not indexed in v0.2; it lives in the entry files and is walked by the resolver, not queried through this index. It is what makes "show me everything in this sector" or "show me every entry of this ontological kind" a single lookup that crosses the internal/external boundary, while the index still records which class each entry belongs to so a consumer never mistakes a reference for a node. Like the catalogue, it is generated and byte-comparable, never authored by hand.
+
+### How CI guards it
+
+The v0.1 admission gate keeps its four fail-closed checks unchanged (schema, graph, resolver, zero-change). v0.2 adds a fifth, `ci/check_facets.py`, wired into `ci/run.py`, that guards the facet layer: every industry and cluster code on an internal entry is in its vocabulary; every Group in the source catalogue is covered by the Group map and every mapped code is known; the external catalogue regenerates byte-identical and each row validates against `schema/external-standard.schema.json`; and the unified index regenerates byte-identical. A drifted vocabulary, an unmapped Group, a hand-edit of a generated file, or a non-deterministic tool all fail the gate. The numbers the gate protects: 4 internal meta-models and 2 edges; 1180 external standards across 37 Groups; 15 clusters and 27 industry codes (15 verticals plus 12 horizontals); the eight ARCH-016 roles distributed R1 9, R2 156, R3 67, R4 140, R5 55, R6 263, R7 22, R8 468.
+
 ## The directory tour
 
 | Directory | What is inside |
@@ -26,6 +97,10 @@ What this repository is **not**: it is not a copy of any model. Registration is 
 | `resolver/` | One resolver script, `resolve.py`, invoked per task. It reads `entries/` and `mmdg/edges.json`, walks the graph, runs Minimal Version Selection, and emits a context pack and a Twin Composition Snapshot. Python 3, standard library plus PyYAML and jsonschema, deterministic, no wall-clock and no network at resolve time. |
 | `ci/` | The four fail-closed checks that run on every pull request: schema validation, graph integrity, resolver determinism, and zero-change registration. |
 | `examples/` | One worked task end to end: the task descriptor, a narrated walkthrough, and the generated fixtures the resolver produces from it. |
+| `facets/` | The controlled facet vocabularies: `clusters.yaml` and `industry.yaml` (the two axes), `group-industry-map.csv` (Group to industry), and `compositional-roles.yaml` and `link-types.yaml` (how an external standard would compose). |
+| `external/` | The external standards discovery catalogue: `external-models.source.csv` (authored source), `external-standards.csv` (generated, source columns plus `Origin` and `Industry`), and `README.md`. References, not graph nodes. |
+| `tools/` | The deterministic build and query tools: `import_external.py` (build the catalogue), `build_index.py` (build the unified index), `query.py` (facet queries). |
+| `index/` | `unified-index.json`, the generated join over both entry classes keyed by the shared facets. Rebuildable from the entries, the catalogue and the vocabularies. |
 
 ## The seed: four records and the edges
 
@@ -100,7 +175,7 @@ This repository is the minimal thing one organization could run in weeks, and th
 
 What is deliberately deferred, with triggers rather than dates (per the ELMM spec Deferrals and the dossier deferral list):
 
-- **v0.2, on a second real consumer or a third registered model:** a protocol facade whose tools are the router verbs, snapshot automation on every resolve, a push-webhook change event (not a bus), the live fetch and fingerprint recompute at resolve time, and the completed Landscape rewrite.
+- **A later minor release (the next resolver milestone, v0.3), on a second real consumer or a third registered model:** a protocol facade whose tools are the router verbs, snapshot automation on every resolve, a push-webhook change event (not a bus), the live fetch and fingerprint recompute at resolve time, and the completed Landscape rewrite. The v0.2.0 release delivered the unified-registry facet layer described above; these resolver-facing items remain deferred.
 - **v1.0, on the first model mastered outside git:** reconciliation loops with `observed_at` on every node, per-attribute mastership and precedence under ARCH-018, mapping sets in the SSSOM shape, a kernel conformance suite, and delta subscriptions.
 - **Indefinite, on a named failure the skeleton cannot absorb:** publish-time satisfiability proofs, signed provenance, a general graph query language (ISO/IEC 39075 GQL is the standard to track), node-level bitemporality, and degradation ladders beyond `max_tokens`.
 
@@ -117,7 +192,7 @@ No deferred item accrues normative weight before its trigger fires. Navigation i
 
 ## Status and versioning
 
-- **Current version:** v0.1.0, Working Draft. See [CHANGELOG.md](CHANGELOG.md).
+- **Current version:** v0.2.0, Working Draft. See [CHANGELOG.md](CHANGELOG.md). v0.2 adds the unified registry: the external standards discovery catalogue, the two orthogonal facet axes (cluster and industry), the facet vocabularies, the build and query tooling, and the unified index. The v0.1 resolver, MMDG, and admission gate are unchanged and still pass.
 - Versioning follows ARCH-002. Major versions of any registered model are distinct registry identities that may coexist during migration.
 - Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md): one proposal per pull request, CI must pass, decisions the ELMM spec marks adopted are not reopened by pull request.
 - License: Apache-2.0. See [LICENSE](LICENSE).

@@ -1,0 +1,64 @@
+# Vercy compositional role facet vocabulary
+#
+# The compositional role (R1 to R8) says HOW an external standard composes into
+# the graph of internal meta-models: what kind of building block it is, and the
+# link type by which an internal node draws on it. Source: Meta-Model-Composition
+# (ARCH-016), which defines the roles and the default composition mechanisms; the
+# per-role counts are the tallies over the source external-standards catalogue.
+#
+# This classification is INFORMATIVE guidance, not a normative constraint. A role
+# suggests a default link type; a specific instantiation may bind differently when
+# the external-to-internal transform runs (out of scope here). Link type codes are
+# defined in facets/link-types.yaml. Bind by reference to ARCH-016.
+
+scheme: vercy-compositional-role
+version: "0.2"
+source: ARCH-016
+informative: true
+description: >
+  Vercy compositional role facet: the eight roles R1 to R8 from ARCH-016, each
+  with its default link type and its count over the external-standards catalogue.
+  Informative guidance on how an external standard composes into internal nodes.
+
+roles:
+  - code: R1
+    name: Foundational Value-Object
+    default_link_type: EMBED
+    catalogue_count: 9
+    meaning: A primitive value type carried inline, embedded directly into a node.
+  - code: R2
+    name: Reference Data / Code List / Classification
+    default_link_type: REFERENCE
+    catalogue_count: 156
+    meaning: A controlled vocabulary or classification cited by external reference.
+  - code: R3
+    name: Identifier Scheme
+    default_link_type: REFERENCE
+    catalogue_count: 67
+    meaning: A naming or identifier system whose values a node references, not copies.
+  - code: R4
+    name: Entity Model
+    default_link_type: REFERENCE
+    catalogue_count: 140
+    meaning: A model of domain entities that a node references as a shared definition.
+  - code: R5
+    name: Cross-cutting Facet
+    default_link_type: MIX-IN
+    catalogue_count: 55
+    meaning: An orthogonal aspect mixed into a node across many domains.
+  - code: R6
+    name: Aggregate / Document / Message
+    default_link_type: COMPOSE
+    catalogue_count: 263
+    meaning: A composite document or message assembled by composing several parts.
+  - code: R7
+    name: Upper Ontology / Foundation / Modeling Substrate
+    default_link_type: ALIGN
+    catalogue_count: 22
+    meaning: A foundational ontology or substrate that a node aligns to, not embeds.
+  - code: R8
+    name: Infrastructure / Format / Protocol / Tooling
+    default_link_type: N/A or EXTEND
+    catalogue_count: 468
+    meaning: Infrastructure, a format, protocol or tool; usually not linked, and
+      extended (EXTEND) when it is a schema language a node builds upon.

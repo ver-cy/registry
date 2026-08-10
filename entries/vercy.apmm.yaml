@@ -43,6 +43,16 @@ steward: Vercy model stewards
 sync_contract:
   mode: git
   freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. Professional intelligence is
+# foundation-and-semantics substrate governing the education-and-skills sector;
+# as a thing it is about organizations and the people and groups within them.
+industry:
+  - foundation-semantics
+  - education-skills
+cluster:
+  - organizations
+  - people-groups
 # Provenance, not a link: the source specification is a restricted-access
 # document, is not a registry node, and is not publicly citable. Only its
 # substance is carried forward into this public model.

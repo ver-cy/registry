@@ -7,7 +7,7 @@
 # shape and the MMDG node profile at once. Cites ARCH-002, ARCH-003, ARCH-009,
 # ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013.
 
-manifest_version: "0.1"
+manifest_version: "0.2"
 registry: ver.cy/registry
 bootstrap: BOOTSTRAP.md
 
@@ -17,10 +17,12 @@ bootstrap: BOOTSTRAP.md
 #   3. Validate every *.yaml in entries/ against schema/registry-node.schema.json
 #      and every edge in mmdg/edges.json against schema/mmdg-edge.schema.json;
 #      a validation failure means the checkout is broken, stop and report.
-#   4. Run the CI gate via ci/run.py: four checks in order, schema validation of
+#   4. Run the CI gate via ci/run.py: five checks in order, schema validation of
 #      entries and edges, graph integrity (referential integrity, export
 #      coverage, declared_min agreement, composes acyclicity, kernel isolation,
-#      unique ids), resolver determinism, and zero-change registration.
+#      unique ids), resolver determinism, zero-change registration, and facet
+#      vocabulary and generated-artifact integrity (internal facet membership,
+#      group-map coverage, import drift, external-row validity, index freshness).
 #   5. Treat every Core and Landscape enumeration as illustrative; the normative
 #      set of models is the entries/ directory. The only normative identity is
 #      registry id plus Canonical Semantic Name (ARCH-003) with version per
@@ -61,20 +63,66 @@ paths:
   - path: ci/
     kind: ci
     description: >-
-      The four conformance checks run in order by ci/run.py on every proposed
+      The five conformance checks run in order by ci/run.py on every proposed
       change: schema validation of entries and edges; graph integrity
       (referential integrity with both endpoints registered, export coverage
       with every referenced kind in the target's exports, agreement between each
       edge declared_min and the from-record requires min_version, composes
-      acyclicity, kernel isolation, unique ids); resolver determinism; and
-      zero-change registration. The write path is propose-only: change lands by
-      pull request.
+      acyclicity, kernel isolation, unique ids); resolver determinism;
+      zero-change registration; and facet vocabulary and generated-artifact
+      integrity (internal facet membership, group-map coverage, import drift,
+      external-row validity, index freshness). The write path is propose-only:
+      change lands by pull request.
   - path: examples/
     kind: example
     description: >-
       One worked example: a task descriptor with the context pack it resolves to
       and the Twin Composition Snapshot that pins the resolution, walked end to
       end against the seed entries and edges.
+  - path: external/
+    kind: external
+    description: >-
+      The external standards catalogue: external-standards.csv, the discoverable
+      reference standards of the unified registry (many, faceted, and not MMDG
+      nodes until instantiated by a future external-to-internal transform, which
+      is out of scope in v0.2). Generated deterministically by
+      tools/import_external.py from external-models.source.csv plus the facet
+      files: the source columns unchanged, with an Industry column inherited from
+      each row's Group through facets/group-industry-map.csv. Each row projects
+      to an object that validates against schema/external-standard.schema.json.
+      README.md documents the catalogue and the fixed CSV-to-JSON field mapping.
+  - path: facets/
+    kind: facets
+    description: >-
+      The two orthogonal facet axes of the unified registry, as versioned
+      vocabulary files. industry.yaml is the sector axis (scheme vercy-industry:
+      fifteen ISIC-aligned verticals and twelve cross-cutting horizontals,
+      twenty-seven codes);
+      clusters.yaml is the ontological axis (the fifteen ontological clusters,
+      mirroring the world-models cluster directories). group-industry-map.csv
+      maps each of the thirty-seven source groups to one or more industry codes;
+      compositional-roles.yaml and link-types.yaml carry the ARCH-016 role and
+      link-type vocabularies. The vocabularies are closed and swappable: a
+      re-map to raw ISIC, NACE or GICS is a facet change, not a schema change.
+  - path: index/
+    kind: index
+    description: >-
+      The unified discovery index, unified-index.json, generated deterministically
+      by tools/build_index.py over both entry classes: the internal meta-model
+      records in entries/ and the external standards in external/. It carries the
+      two facet axes so a consumer can query by industry or by cluster across
+      both classes without opening every file. A derived artifact, rebuildable
+      byte-identically from the entries, the external catalogue and the facets.
+  - path: tools/
+    kind: tools
+    description: >-
+      The deterministic generators and the query helper: import_external.py
+      (builds external/external-standards.csv from the source and the facets),
+      build_index.py (builds index/unified-index.json over both entry classes),
+      and query.py (reads the index to answer facet queries). Python 3, standard
+      library plus PyYAML and jsonschema only, no wall-clock and no randomness,
+      stable sort order everywhere so a regenerated catalogue or index is
+      byte-identical. README.md documents invocation.
 
 # kind_rules: how a traversal tool classifies and validates each normative file.
 kind_rules:
@@ -96,6 +144,59 @@ kind_rules:
     description: >-
       A JSON array of edge records; each element validates against
       mmdg-edge.schema.json. The sole normative statement of the MMDG.
+  - match: "external/external-standards.csv"
+    kind: external-standards-file
+    format: csv
+    item_schema: schema/external-standard.schema.json
+    description: >-
+      The external standards catalogue as a CSV table. Each row projects to a
+      JSON object under the fixed lower_snake_case CSV-to-JSON field mapping and
+      validates against external-standard.schema.json. Generated by
+      tools/import_external.py; ci/check_facets.py regenerates and diffs it and
+      validates every projected row. Not an MMDG node file: external standards
+      carry the source columns plus the two facet axes, not the node profile.
+  - match: "facets/industry.yaml"
+    kind: facet-vocabulary
+    format: yaml
+    description: >-
+      The industry facet vocabulary (scheme vercy-industry): the closed set of
+      industry codes the industry[] fields reference. The sector axis of the
+      unified registry, orthogonal to the cluster axis.
+  - match: "facets/clusters.yaml"
+    kind: facet-vocabulary
+    format: yaml
+    description: >-
+      The cluster facet vocabulary: the closed set of the fifteen ontological
+      cluster ids the cluster[] fields reference, mirroring the world-models
+      cluster directories. The ontological axis, orthogonal to the industry axis.
+  - match: "facets/group-industry-map.csv"
+    kind: facet-map
+    format: csv
+    description: >-
+      Maps each of the thirty-seven source groups to one or more industry codes
+      (semicolon-separated). The importer reads it to inherit industry onto every
+      external standard from its Group.
+  - match: "facets/compositional-roles.yaml"
+    kind: facet-vocabulary
+    format: yaml
+    description: >-
+      The ARCH-016 compositional-role vocabulary R1 to R8, with the default link
+      type each role implies. Referenced by the external catalogue
+      compositional_role and default_link_type columns.
+  - match: "facets/link-types.yaml"
+    kind: facet-vocabulary
+    format: yaml
+    description: >-
+      The ARCH-016 link-type vocabulary (EMBED, REFERENCE, MIX-IN, COMPOSE,
+      ALIGN, EXTEND, and the N/A sentinel). Referenced by the external catalogue
+      default_link_type column.
+  - match: "index/unified-index.json"
+    kind: unified-index
+    format: json
+    description: >-
+      The generated discovery index over both entry classes, carrying the two
+      facet axes for query by industry or by cluster. A derived artifact,
+      rebuildable byte-identically by tools/build_index.py.
 
 traversal_rules:
   - "Entry point. BOOTSTRAP.md is the single entry point; this manifest lists what

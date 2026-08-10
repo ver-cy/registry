@@ -1,0 +1,38 @@
+Group,Industries
+Healthcare & Life Sciences,healthcare-life-sciences
+"Data, API & Serialization",data-interchange
+Semantic Web & Linked Data,foundation-semantics
+"Library, Metadata & Cultural Heritage",knowledge-metadata
+Geospatial & Temporal,geospatial-temporal
+"Identity, Security, Privacy & Governance",identity-security-privacy
+Enterprise Architecture & Modeling,foundation-semantics
+"Media, Broadcast & Content Provenance",media-entertainment
+"Software, DevOps & Security Artifacts",software-devops
+"Commerce, Product & Supply Chain",commerce-retail
+"Manufacturing, Engineering & BIM",manufacturing-industrial;construction-built-environment
+"3D, Gaming, XR & Robotics",immersive-3d;media-entertainment
+"AI, ML & Data Governance",ai-data-governance
+"Research Data, Scholarly & Identifiers",knowledge-metadata;professional-scientific
+"IoT, Devices & Digital Twins",iot-digital-twins
+Weather & Earth Observation,geospatial-temporal
+"Blockchain, Web3 & Tokens",distributed-ledger
+Finance & Insurance,financial-services
+Bioinformatics & Genomics Formats,healthcare-life-sciences;professional-scientific
+"Calendaring, Contacts & Social",communication-collaboration
+Energy & Utilities,energy-utilities
+"Agriculture, Food & Environment",agriculture-food
+"Music, Audio & Timeline Media",media-entertainment
+"HR, Skills & Education",education-skills
+Aviation & Air Traffic,transport-logistics
+Telecom & Networking,telecommunications
+Mobility & Transportation,transport-logistics
+"ESG, Sustainability & Climate Reporting",sustainability-esg
+"Government, Legal & Civic",government-public-sector
+"Chemistry, Materials & Laboratory",professional-scientific;manufacturing-industrial
+"Defense, Intelligence & Emergency",defense-security
+Advertising & Marketing,media-entertainment
+"Tax, e-Invoicing & Audit",financial-services;government-public-sector
+"Survey, Statistics & Official Data",government-public-sector;professional-scientific
+"Telecom Billing, Roaming & Numbering",telecommunications;financial-services
+Maritime & Hydrographic,transport-logistics
+"Retail, Point-of-Sale & Hospitality",commerce-retail;hospitality-tourism

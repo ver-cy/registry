@@ -1,0 +1,68 @@
+# Vercy ontological cluster facet vocabulary
+#
+# The cluster axis of the unified registry. A cluster answers "what a thing IS":
+# it is the ontological kind of the entity (terrain, an organization, a payment,
+# a record of account). This is ORTHOGONAL to the industry axis
+# (facets/industry.yaml), which answers which sector uses or governs the thing.
+#
+# These are the fifteen ontological clusters of the world-models corpus (the
+# directory ids under world-models/models). Cluster is the primary facet for
+# internal meta-models and an optional facet for external standards in v0.2.
+#
+# The code of each cluster is the exact directory id (for example planet-nature),
+# so an entry that carries a cluster code resolves directly to its world-models
+# home. Bind by reference; see ARCH-002 and ARCH-003 for the corpus structure.
+
+scheme: vercy-cluster
+version: "0.2"
+description: >
+  Vercy ontological cluster facet: the fifteen world-models clusters. This is the
+  "what a thing is" axis, orthogonal to the industry axis (which sector uses or
+  governs it). Primary for internal meta-models, optional for external standards.
+
+clusters:
+  - code: activity-work
+    label: Activity and Work
+    note: Processes, tasks, jobs, labor, and how work is organized and performed.
+  - code: built-environment
+    label: Built Environment
+    note: Buildings, infrastructure, facilities, and constructed physical space.
+  - code: civilization
+    label: Civilization
+    note: Culture, language, heritage, history, and the long-run human record.
+  - code: economy
+    label: Economy
+    note: Markets, trade, money, value exchange, and economic activity.
+  - code: events-phenomena
+    label: Events and Phenomena
+    note: Occurrences, incidents, temporal processes, and observable phenomena.
+  - code: flows-resources
+    label: Flows and Resources
+    note: Energy, materials, water, and the movement of resources through systems.
+  - code: knowledge-information
+    label: Knowledge and Information
+    note: Data, documents, concepts, models, and recorded knowledge.
+  - code: matter-artifacts
+    label: Matter and Artifacts
+    note: Physical substances, materials, products, and manufactured objects.
+  - code: organizations
+    label: Organizations
+    note: Firms, institutions, agencies, and other structured collective bodies.
+  - code: people-groups
+    label: People and Groups
+    note: Persons, roles, communities, and human collectives.
+  - code: planet-nature
+    label: Planet and Nature
+    note: Terrain, ecosystems, climate, and the natural earth.
+  - code: polity
+    label: Polity
+    note: The state, government, law, jurisdiction, and public authority.
+  - code: registries-ledgers
+    label: Registries and Ledgers
+    note: Registers, records of account, and authoritative bookkeeping.
+  - code: security-ownership-access
+    label: Security, Ownership and Access
+    note: Identity, rights, ownership, permissions, and control of access.
+  - code: society
+    label: Society
+    note: Social structures, norms, relationships, and collective life.

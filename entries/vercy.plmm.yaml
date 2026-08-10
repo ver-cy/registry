@@ -47,6 +47,14 @@ steward: Vercy model stewards
 sync_contract:
   mode: git
   freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. A product-landscape kernel is
+# foundation-and-semantics substrate; as a thing it composes and describes
+# organizations and their product portfolios.
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
 routing_hints:
   - match_entities:
       - plmm.product

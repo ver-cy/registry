@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""run: the ELMM registry admission gate, all four checks in order.
+"""run: the ELMM registry admission gate, all five checks in order.
 
 Runs, in order:
 
@@ -7,6 +7,12 @@ Runs, in order:
     check_graph        MMDG graph integrity (ELMM-I11, I16, I17, I18, I19)
     check_resolve      resolver determinism and output validity (ELMM-I23, I30)
     check_zero_change  the zero-change registration guarantee (ELMM-I7, ELMM-I44)
+    check_facets       facet vocabulary and generated-artifact integrity (ARCH-017)
+
+The first four are the walking-skeleton kernel checks. check_facets is the
+unified-registry extension: it guards the two orthogonal facet axes (cluster and
+industry) over both entry classes and proves the two generated artifacts
+(external/external-standards.csv, index/unified-index.json) are current.
 
 Prints a per-check summary and exits non-zero if any check failed. This is the
 fail-closed admission gate on the registry write path (ELMM-I39): the whole
@@ -26,6 +32,7 @@ CHECKS = (
     "check_graph.py",
     "check_resolve.py",
     "check_zero_change.py",
+    "check_facets.py",
 )
 
 
