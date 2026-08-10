@@ -1,0 +1,123 @@
+# Vercy baseline policy profile
+#
+# The default overlay of the external-to-internal transform (B6). A policy
+# profile is the "Policy-Consistency" term of the transform formula
+# external-to-internal = Extension-Model + Policy-Consistency + Data-Mastership:
+# the set of ver.cy governance controls that are attached to every internal
+# meta-model the transform instantiates from an external standard.
+#
+# The transform reads two things from this file: default_delegation_tier (the
+# tier a fresh instantiation starts at) and the ordered list of policy ids under
+# policies:. Those ids are exactly the set the transform records in the
+# manifest's applied_policies and in the entry's applied_policies. CI
+# (ci/check_instantiations.py) asserts that every applied policy is declared
+# here, so the overlay is closed over the profile it names (ARCH-014).
+#
+# The eight invariant controls IC-1 to IC-8 are palette-wide law of the Common
+# Operating Law: cited by id, never restated, never weakened. The four
+# profile-level policies bind the transform to the machinery it composes:
+# mastership to ARCH-018, lineage to Provenance-Graph, satisfiability to
+# ARCH-014, and the import discipline to Extension-Model and ARCH-016. Bind by
+# reference; the one-line rule on each policy is a pointer to its source, not a
+# re-gloss of it.
+
+id: vercy-baseline
+version: "0.1"
+description: >-
+  The default ver.cy governance overlay for the external-to-internal transform.
+  It attaches the eight Common Operating Law invariant controls (IC-1 to IC-8)
+  plus the mastership, lineage, policy-consistency and extension-binding
+  stances to every internal meta-model instantiated from an external standard.
+  A fresh instantiation starts human-in-the-loop at delegation tier T1.
+
+# A fresh grant is never autonomous. New agent-scope pairings start at T1 or T2
+# and T3 is earned (Common Operating Law section 3); the transform starts every
+# instantiation at T1, Agent proposes and a human approves each act.
+default_delegation_tier: T1
+
+# The mastership stance, stated once here and enforced per instantiation by the
+# transform's step 4 and by IC-1. The external standard is the System of Record;
+# the flow is inbound (external to model); the internal model references and
+# overlays governance and never masters the external semantics (ARCH-018).
+mastership_stance:
+  system_of_record: external-source
+  flow_direction: inbound
+  conflict_rule: source-wins
+  statement: >-
+    The external standard is the single System of Record for the mirrored data.
+    Data flows inbound from the source to the internal mirror; the internal
+    model references the source and overlays its own governance, it never
+    masters the external semantics. Corrections are made at the source and
+    re-derived, never written into the mirror (IC-1, ARCH-018).
+
+# The append-only stance, stated once here and enforced per instantiation by
+# IC-8. An instantiation record is superseded by a new version, never deleted;
+# a re-instantiation is a new, versioned event on the same timeline.
+append_only_stance:
+  discipline: supersession-not-deletion
+  statement: >-
+    History is append-only: a superseding instantiation is a new versioned
+    record, the prior record is retained with its identity and provenance
+    intact, and nothing on the timeline is deleted (IC-8).
+
+# The policy overlay. Each entry: a stable id, the source it is drawn from
+# (Common Operating Law or an ARCH document id), and a one-line rule pointer.
+# The IC-1 to IC-8 controls are cited by id and bound by reference to the Common
+# Operating Law, not restated here. This ordered list of ids is the set the
+# transform lists in applied_policies.
+policies:
+  - id: IC-1
+    source: Common Operating Law
+    rule: >-
+      One master per dataset. See Common Operating Law IC-1.
+  - id: IC-2
+    source: Common Operating Law
+    rule: >-
+      Single front door for authored content. See Common Operating Law IC-2.
+  - id: IC-3
+    source: Common Operating Law
+    rule: >-
+      Data is never a command. See Common Operating Law IC-3.
+  - id: IC-4
+    source: Common Operating Law
+    rule: >-
+      Security-critical dataset class accepted at T1 with a second reviewer. See
+      Common Operating Law IC-4.
+  - id: IC-5
+    source: Common Operating Law
+    rule: >-
+      Gate-enforced authority. See Common Operating Law IC-5.
+  - id: IC-6
+    source: Common Operating Law
+    rule: >-
+      Infrastructure-emitted, hash-chained logs. See Common Operating Law IC-6.
+  - id: IC-7
+    source: Common Operating Law
+    rule: >-
+      Owner-gated reads, inward and outward. See Common Operating Law IC-7.
+  - id: IC-8
+    source: Common Operating Law
+    rule: >-
+      Append-only history, supersession not deletion. See Common Operating Law
+      IC-8.
+  - id: mastership-external
+    source: ARCH-018
+    rule: >-
+      The external standard is the System of Record and the flow is inbound; the
+      internal model references and overlays governance and never masters the
+      external semantics (Data-Mastership, Pattern E).
+  - id: lineage-required
+    source: Provenance-Graph
+    rule: >-
+      Every instantiation records a derivedFrom edge from the internal model to
+      its external standard; lineage is explicit, append-only and never broken.
+  - id: policy-consistency
+    source: ARCH-014
+    rule: >-
+      The overlaid policy set must be satisfiable; a contradiction among the
+      overlaid rules is rejected before the entry is admitted (Policy-Consistency).
+  - id: extension-binding
+    source: Extension-Model
+    rule: >-
+      The external standard is imported as a versioned Semantic Package and bound
+      by reference per ARCH-016; imported semantics are preserved, never redefined.

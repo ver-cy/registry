@@ -4,7 +4,7 @@ The single home where every meta-model registers as one node and declares its ty
 
 - **The specification** lives in [ver-cy/elmm](https://github.com/ver-cy/elmm): the ELMM profile, the JSON Schemas, and the normative SHALL text. This repository is the running instance of that profile.
 - **Entry point for humans and agents:** [BOOTSTRAP.md](BOOTSTRAP.md), per the ARCH-017 traversal contract.
-- **Status:** v0.2.0, Working Draft. **License:** Apache-2.0.
+- **Status:** v0.3.0, Working Draft. **License:** Apache-2.0.
 
 ## What this repository is
 
@@ -20,7 +20,7 @@ What this repository is **not**: it is not a copy of any model. Registration is 
 
 Everything above describes the internal meta-models: the MMDG nodes, few and governed. As of v0.2 the repository is a unified registry with a second entry class alongside them, and two facet axes that classify both classes the same way.
 
-**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are four of them. An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by a future external-to-internal transform, which is deferred and out of scope here. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
+**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are four of them. An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by the external-to-internal transform (workstream B6), described below. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
 
 **The two axes are orthogonal, and both apply to both classes.** They answer different questions:
 
@@ -87,6 +87,38 @@ python tools/query.py --industry government-public-sector # the state as one sec
 
 The v0.1 admission gate keeps its four fail-closed checks unchanged (schema, graph, resolver, zero-change). v0.2 adds a fifth, `ci/check_facets.py`, wired into `ci/run.py`, that guards the facet layer: every industry and cluster code on an internal entry is in its vocabulary; every Group in the source catalogue is covered by the Group map and every mapped code is known; the external catalogue regenerates byte-identical and each row validates against `schema/external-standard.schema.json`; and the unified index regenerates byte-identical. A drifted vocabulary, an unmapped Group, a hand-edit of a generated file, or a non-deterministic tool all fail the gate. The numbers the gate protects: 4 internal meta-models and 2 edges; 1180 external standards across 37 Groups; 15 clusters and 27 industry codes (15 verticals plus 12 horizontals); the eight ARCH-016 roles distributed R1 9, R2 156, R3 67, R4 140, R5 55, R6 263, R7 22, R8 468.
 
+## The external-to-internal transform (B6)
+
+Everything above stops at the boundary: an external standard is a reference the registry can find and facet, never a node the resolver walks. The external-to-internal transform (workstream B6) is the single operation that crosses that boundary. It takes one external standard, one row of `external/external-standards.csv`, and instantiates an internal tenant meta-model from it: a new Model Registration Record that is a first-class MMDG node the resolver can compose, plus an instantiation manifest that records exactly how the crossing was made. It is the flagship button, and it is one command.
+
+The operation is a composition of machinery this repository already binds by reference, stated by the owner as a formula:
+
+> external-to-internal = Extension-Model + Policy-Consistency + Data-Mastership
+
+made a single operation. `Extension-Model` supplies the binding (adopt the external model by reference, never by silent copy), `Policy-Consistency` (ARCH-014) supplies the governance overlay, and `Data-Mastership` (ARCH-018) fixes who owns the data. The composition mechanism is ARCH-016 (`Meta-Model-Composition`), the same ARCH-016 roles R1 to R8 the facet layer already carries. The transform adds no new theory; it wires the four together and runs them once.
+
+What the overlay does, in the order the generated record carries it:
+
+- **Binds the external model.** The generated entry carries an AISMM `external_binding` block (the established shape: `target`, `composition_kind`, `link_type`, `standard_id`, `version`, bound by reference to the AISMM external-model-binding governance and its schema in the AISMM repository). The `link_type` is derived from the standard's `DefaultLinkType` and the `composition_kind` from its `CompositionalRole` (R1 to R8, ARCH-016), with the AISMM conditional that a `value_object` forces `link_type` `embed`. The registry classification of the standard is therefore what settles the binding, deterministically.
+- **Overlays the ver.cy policy profile.** The default profile is `transform/policy-profiles/vercy-baseline.yaml`: the eight invariant controls of the Common Operating Law, IC-1 to IC-8, overlaid on the new model, and Policy-Consistency (ARCH-014) as the discipline that keeps them coherent. Two controls carry the weight. IC-1 (one master per dataset, mastership declared in the Mastership Register, never inferred) is why the transform declares mastership rather than leaving it implied. IC-3 (data is never a command: every context section carries an origin taint class) is why an instantiated external model is `mirrored-external`, therefore data, never instructions. A fresh instantiation starts at delegation tier T1 (human-in-the-loop): the transform proposes, a human approves.
+- **Declares data-mastership.** Per ARCH-018 the external source is the master. The generated entry's `source.repository` points at the standard's `SpecificationSourceURL`, the authoritative source the registry does not own, and the manifest records a Mastership Register stanza whose system of record is that external source, with an inbound flow direction. The registry masters identity and relationships; it never masters the external model.
+- **Records lineage.** Per `Provenance-Graph` the manifest records `derived_from` (the external standard), the transform that produced the node, and a provenance note, so the crossing is auditable back to its source.
+
+**Worked example.** Instantiate HL7 FHIR for tenant `acme`:
+
+```
+python tools/instantiate.py --standard FHIR --tenant acme --at 2026-08-10T00:00:00Z
+```
+
+FHIR is classified `R4` / `REFERENCE` in the catalogue, so the binding resolves deterministically to `composition_kind` `entity` and `link_type` `reference` (no value-object override applies); the `healthcare-life-sciences` industry facet is inherited from the row verbatim; and `source.repository` is the FHIR specification URL, the master per ARCH-018. Running it produces exactly two artifacts:
+
+1. **An entry** under `entries/` (for example `entries/acme.fhir.yaml`): the new internal Model Registration Record, `kind` domain, `role` core, `origin` internal, `status` draft, `version` 0.1.0, stewarded by the tenant, validating against `schema/registry-node.schema.json` at v0.3 with the new `derived_from`, `external_binding`, `applied_policies` and `tenant` fields filled. Once written it is an MMDG node: `tools/build_index.py` indexes it and the resolver can compose it.
+2. **A manifest** under `instantiations/` (one JSON file per instantiation): the full transform result, recording the `external_ref`, the `internal_id` of the new entry, the `external_binding` block emitted, the `mastership` stanza (system of record set to the external source), the `applied_policies` (the IC controls and profile policies overlaid), the `delegation_tier` (T1 for a fresh instantiation), the `lineage`, and the deterministic `semantic_fingerprint`. It validates against `schema/instantiation-manifest.schema.json`.
+
+The transform is deterministic and CI-guarded. It reads no wall clock (the timestamp comes from the `--at` ISO-8601 argument) and no randomness: the `instantiation_id` and `semantic_fingerprint` are deterministic hashes over canonical content, and re-running with the same inputs yields a byte-identical entry and manifest. `ci/check_instantiations.py`, wired into `ci/run.py` after `check_facets`, is a fail-closed check that regenerates each committed instantiation and diffs it, validates every generated entry against the v0.3 node schema and every manifest against the manifest schema, and confirms the five prior checks still pass on the enlarged registry. The worked-example entry and manifest are not hand-written: they are generated by running the tool and committed as fixtures by the operator, so the example above is reproducible byte for byte.
+
+The normative account is `transform/EXTERNAL-TO-INTERNAL.md`; the default overlay is `transform/policy-profiles/vercy-baseline.yaml`; the manifest shape is `schema/instantiation-manifest.schema.json`. This is the moment an external reference is promoted into the graph, the crossing the unified-registry section named and deferred.
+
 ## The directory tour
 
 | Directory | What is inside |
@@ -99,8 +131,10 @@ The v0.1 admission gate keeps its four fail-closed checks unchanged (schema, gra
 | `examples/` | One worked task end to end: the task descriptor, a narrated walkthrough, and the generated fixtures the resolver produces from it. |
 | `facets/` | The controlled facet vocabularies: `clusters.yaml` and `industry.yaml` (the two axes), `group-industry-map.csv` (Group to industry), and `compositional-roles.yaml` and `link-types.yaml` (how an external standard would compose). |
 | `external/` | The external standards discovery catalogue: `external-models.source.csv` (authored source), `external-standards.csv` (generated, source columns plus `Origin` and `Industry`), and `README.md`. References, not graph nodes. |
-| `tools/` | The deterministic build and query tools: `import_external.py` (build the catalogue), `build_index.py` (build the unified index), `query.py` (facet queries). |
+| `tools/` | The deterministic build and query tools: `import_external.py` (build the catalogue), `build_index.py` (build the unified index), `query.py` (facet queries), and `instantiate.py` (the external-to-internal transform, the B6 button). |
 | `index/` | `unified-index.json`, the generated join over both entry classes keyed by the shared facets. Rebuildable from the entries, the catalogue and the vocabularies. |
+| `transform/` | The external-to-internal transform: `EXTERNAL-TO-INTERNAL.md` (the normative spec), `policy-profiles/vercy-baseline.yaml` (the default ver.cy overlay: IC-1 to IC-8, T1 default, the mastership stance), and its `README.md`. |
+| `instantiations/` | One JSON instantiation manifest per external-to-internal instantiation, recording how the external model was bound, which policies were overlaid, who masters the data, and the lineage. Generated by `tools/instantiate.py`, validated against `schema/instantiation-manifest.schema.json`. |
 
 ## The seed: four records and the edges
 
@@ -175,7 +209,7 @@ This repository is the minimal thing one organization could run in weeks, and th
 
 What is deliberately deferred, with triggers rather than dates (per the ELMM spec Deferrals and the dossier deferral list):
 
-- **A later minor release (the next resolver milestone, v0.3), on a second real consumer or a third registered model:** a protocol facade whose tools are the router verbs, snapshot automation on every resolve, a push-webhook change event (not a bus), the live fetch and fingerprint recompute at resolve time, and the completed Landscape rewrite. The v0.2.0 release delivered the unified-registry facet layer described above; these resolver-facing items remain deferred.
+- **A later minor release (the next resolver milestone), on a second real consumer or a third registered model:** a protocol facade whose tools are the router verbs, snapshot automation on every resolve, a push-webhook change event (not a bus), the live fetch and fingerprint recompute at resolve time, and the completed Landscape rewrite. The v0.2.0 release delivered the unified-registry facet layer and the v0.3.0 release delivered the external-to-internal transform, both described above; these resolver-facing items remain deferred.
 - **v1.0, on the first model mastered outside git:** reconciliation loops with `observed_at` on every node, per-attribute mastership and precedence under ARCH-018, mapping sets in the SSSOM shape, a kernel conformance suite, and delta subscriptions.
 - **Indefinite, on a named failure the skeleton cannot absorb:** publish-time satisfiability proofs, signed provenance, a general graph query language (ISO/IEC 39075 GQL is the standard to track), node-level bitemporality, and degradation ladders beyond `max_tokens`.
 
@@ -192,7 +226,7 @@ No deferred item accrues normative weight before its trigger fires. Navigation i
 
 ## Status and versioning
 
-- **Current version:** v0.2.0, Working Draft. See [CHANGELOG.md](CHANGELOG.md). v0.2 adds the unified registry: the external standards discovery catalogue, the two orthogonal facet axes (cluster and industry), the facet vocabularies, the build and query tooling, and the unified index. The v0.1 resolver, MMDG, and admission gate are unchanged and still pass.
+- **Current version:** v0.3.0, Working Draft. See [CHANGELOG.md](CHANGELOG.md). v0.3 adds the external-to-internal transform: the normative spec, the ver.cy policy profile, the instantiation manifest schema, the v0.3 additive extension of the node schema, the `instantiate.py` button, and the sixth CI check. v0.2 added the unified registry: the external standards discovery catalogue, the two orthogonal facet axes (cluster and industry), the facet vocabularies, the build and query tooling, and the unified index. The v0.1 resolver, MMDG, and admission gate are unchanged and still pass, as are the v0.2 facet layer and its check.
 - Versioning follows ARCH-002. Major versions of any registered model are distinct registry identities that may coexist during migration.
 - Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md): one proposal per pull request, CI must pass, decisions the ELMM spec marks adopted are not reopened by pull request.
 - License: Apache-2.0. See [LICENSE](LICENSE).

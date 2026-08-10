@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.3/instantiation-manifest.schema.json",
+  "title": "Instantiation manifest v0.3",
+  "description": "The full result record of one external-to-internal instantiation (B6): the deterministic transform that takes one external standard from the unified registry (a row of external/external-standards.csv) and instantiates an internal tenant meta-model from it by overlaying all the ver.cy governance (policies, regulations, rules per ARCH-014 Policy-Consistency) plus data mastership (ARCH-018) plus full lineage back to the external source (Provenance-Graph). One JSON file per instantiation, emitted alongside the new internal Model Registration Record. The transform is external-to-internal equals Extension-Model plus Policy-Consistency plus Data-Mastership, made a single operation. The manifest records exactly how the external model was bound (external_binding, the AISMM shape per ARCH-016), which policies were overlaid (applied_policies, including the IC-1 to IC-8 invariant controls), who masters the data (mastership, a Mastership Register stanza per IC-1 and ARCH-018), at what delegation tier the grant starts (delegation_tier, T1 for a fresh instantiation per the Common Operating Law), and the lineage. The bound external content is mirrored-external per IC-3: data, never instructions. instantiation_id and semantic_fingerprint are deterministic hashes over canonical content: re-running the transform with the same inputs and the same --at timestamp yields a byte-identical manifest. Cites ARCH-014, ARCH-016, ARCH-018, Extension-Model, Provenance-Graph, IC-1 to IC-8, T1 to T3.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "instantiation_id",
+    "created_at",
+    "tenant",
+    "profile",
+    "external_ref",
+    "internal_id",
+    "external_binding",
+    "mastership",
+    "applied_policies",
+    "delegation_tier",
+    "lineage",
+    "semantic_fingerprint"
+  ],
+  "properties": {
+    "instantiation_id": {
+      "type": "string",
+      "description": "Deterministic identifier of this instantiation, a hash over the canonical transform inputs (tenant, registry_ref, profile). Stable: the same inputs yield the same id, no wall-clock, no random."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of the instantiation, supplied by the transform's --at argument, never read from the wall clock, so the run is reproducible."
+    },
+    "tenant": {
+      "type": "string",
+      "description": "The tenant that instantiated the internal model. Becomes the steward of the internal record and the mastership declarant per IC-1."
+    },
+    "profile": {
+      "type": "string",
+      "description": "The policy profile identifier applied at instantiation, for example vercy-baseline, resolving to the set of policies in applied_policies per ARCH-014."
+    },
+    "external_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_ref", "name", "compositional_role", "default_link_type"],
+      "description": "The external standard the internal model was instantiated from: the transform input row of external/external-standards.csv.",
+      "properties": {
+        "registry_ref": {
+          "type": "string",
+          "description": "Pointer into the external standards catalogue: the Acronym, or the Name when no Acronym, of the source row."
+        },
+        "name": {
+          "type": "string",
+          "description": "The external standard's Name."
+        },
+        "compositional_role": {
+          "type": "string",
+          "description": "The external standard's CompositionalRole classification (R1 to R8 per ARCH-016) that drove composition_kind."
+        },
+        "default_link_type": {
+          "type": "string",
+          "description": "The external standard's DefaultLinkType classification (EMBED, REFERENCE, MIX-IN, COMPOSE, ALIGN, EXTEND, N/A) that drove link_type."
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The external standard's SpecificationSourceURL, the master per ARCH-018."
+        },
+        "version": {
+          "type": "string",
+          "description": "Pinned version of the external standard, the source row Year or version where present."
+        }
+      }
+    },
+    "internal_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+      "description": "The registry id of the new internal Model Registration Record produced by the transform, the entry written to registry/entries/."
+    },
+    "external_binding": {
+      "type": "object",
+      "required": ["target", "composition_kind", "link_type", "standard_id", "version"],
+      "additionalProperties": true,
+      "description": "The AISMM external_binding block, the same shape and constraints as software-meta-model aismm-external-binding.schema.json and registry-node.schema.json external_binding: how the external standard is composed per ARCH-016.",
+      "properties": {
+        "target": {
+          "type": "string",
+          "description": "What is bound: an AISMM entity ID or a field path."
+        },
+        "composition_kind": {
+          "type": "string",
+          "enum": ["attribute", "value_object", "entity", "code", "facet"],
+          "description": "The concept-kind from the rubric. Resolved from CompositionalRole: R1 value_object, R2 and R3 code, R4 entity, R5 facet, R6 and R7 entity, R8 attribute."
+        },
+        "link_type": {
+          "type": "string",
+          "enum": ["embed", "reference", "mixin", "extend", "align", "annotate"],
+          "description": "The composition mechanism. Resolved from DefaultLinkType: EMBED embed, REFERENCE reference, MIX-IN mixin, ALIGN align, EXTEND extend, COMPOSE reference, N/A annotate. The value_object conditional forces embed."
+        },
+        "standard_id": {
+          "type": "string",
+          "description": "The external standard name or acronym as catalogued in the registry."
+        },
+        "version": {
+          "type": "string",
+          "description": "Pinned version of the external standard."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Canonical URI prefix or identifier scheme, the external standard's NamespaceURI."
+        },
+        "semantic_package": {
+          "type": "string",
+          "pattern": "^.+@.+$",
+          "description": "The Semantic Package name@version this import belongs to (Extension-Model)."
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "Optional Semantic Fingerprint of the imported shape."
+        },
+        "registry_ref": {
+          "type": "string",
+          "description": "Optional pointer into the registry, the external-standards.csv row."
+        },
+        "connector": {
+          "type": "string",
+          "description": "Optional curated connector name from the Meta-Universe Connector Catalogue."
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "composition_kind": { "const": "value_object" } } },
+          "then": { "properties": { "link_type": { "const": "embed" } } }
+        }
+      ]
+    },
+    "mastership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset", "system_of_record", "flow_direction", "conflict_rule"],
+      "description": "The Mastership Register stanza per IC-1 (one master per dataset, declared never inferred) and ARCH-018 Data-Mastership. For an instantiated external model the system of record is the external source and the flow is inbound.",
+      "properties": {
+        "dataset": {
+          "type": "string",
+          "description": "The dataset this stanza governs, the instantiated internal model's data."
+        },
+        "system_of_record": {
+          "type": "string",
+          "description": "The single master per IC-1: the external source (its SpecificationSourceURL or NamespaceURI), the authoritative master per ARCH-018."
+        },
+        "flow_direction": {
+          "type": "string",
+          "enum": ["inbound", "outbound", "bidirectional"],
+          "description": "Direction of the mastered flow. inbound for an instantiated external model: the external source masters, the registry mirrors."
+        },
+        "conflict_rule": {
+          "type": "string",
+          "description": "How write conflicts resolve, for example source-wins for an inbound mirror per ARCH-018."
+        },
+        "cadence": {
+          "type": "string",
+          "description": "Optional refresh cadence as an ISO-8601 duration, for example P30D."
+        }
+      }
+    },
+    "applied_policies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "The policy identifiers overlaid at instantiation per ARCH-014 Policy-Consistency, including the IC-1 to IC-8 invariant controls of the Common Operating Law and the profile's own policy ids. At least one."
+    },
+    "delegation_tier": {
+      "type": "string",
+      "enum": ["T1", "T2", "T3"],
+      "description": "The delegation tier the grant starts at per the Common Operating Law: T1 human-in-the-loop (Agent proposes, human approves each act), T2 human-on-the-loop, T3 autonomous-with-audit. New grants start at T1 or T2; T3 is earned. A fresh instantiation defaults to T1."
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["derived_from", "transform"],
+      "description": "The provenance record per Provenance-Graph: the internal model points back to its external source through this lineage.",
+      "properties": {
+        "derived_from": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["registry_ref", "name"],
+          "description": "The lineage head, the external standard this internal model was derived from.",
+          "properties": {
+            "registry_ref": {
+              "type": "string",
+              "description": "The external standard's Acronym or Name, the source row pointer."
+            },
+            "name": {
+              "type": "string",
+              "description": "The external standard's Name."
+            },
+            "source_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "The external standard's SpecificationSourceURL, the master per ARCH-018."
+            },
+            "compositional_role": {
+              "type": "string",
+              "description": "The external standard's CompositionalRole (R1 to R8 per ARCH-016)."
+            }
+          }
+        },
+        "transform": {
+          "const": "external-to-internal",
+          "description": "The deterministic transform that produced the internal model: Extension-Model plus Policy-Consistency (ARCH-014) plus Data-Mastership (ARCH-018), made a single operation."
+        },
+        "provenance": {
+          "type": "string",
+          "description": "Optional free-text provenance note per Provenance-Graph, recording how the external model was bound and mirrored (mirrored-external per IC-3)."
+        }
+      }
+    },
+    "semantic_fingerprint": {
+      "type": "string",
+      "description": "Deterministic Semantic Fingerprint of the instantiated internal model per ARCH-009, a hash over the canonical content of the emitted entry. Stable: the same inputs yield the same fingerprint."
+    }
+  }
+}

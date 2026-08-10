@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ver.cy/registry/schema/0.2/registry-node.schema.json",
-  "title": "Registry node (unified registry entry, superset profile) v0.2",
-  "description": "The unified registration record of the ELMM registry: the single home where the Meta-Universe registry entry (entry.schema.json, the B5 live register) and the MMDG node profile (mmdg-node.schema.json, the B3 dependency graph) converge into one file. An entry that validates against this schema carries BOTH the upstream-required registry fields (id, name, publisher, owner, version, kind, status, license, access, purpose, registered, and source when access is public) AND the MMDG profile fields (csn, primary_namespace, role, fingerprint, source, steward, sync_contract, exports, requires, display_alias, with optional industry, origin, provenance, routing_hints), so the same record serves discovery and composition at once. This schema is a superset: it inlines the upstream constraints (no remote references, so CI validates offline) and adds the profile constraints, and it does not forbid additional properties, so an entry projected to the upstream field set validates the upstream schema and the same entry validates the MMDG profile. The one lifecycle exception is status: the records carry the MMDG profile term active, which the upstream-field projection maps onto stable pending the upstream change request that adds active to the entry vocabulary. Identity is registry id plus Canonical Semantic Name (ARCH-003) with version per ARCH-002; the semantic pin is the Semantic Fingerprint per ARCH-009 over the MUIF canonical form, never a byte hash. The node-level role holds the triad core, landscape, kernel and is the MMDG-normative field; kind is the upstream registry scope class and is a projection of role (core maps to domain, landscape maps to enterprise, kernel maps to enterprise). The node-level role is distinct from the edge-level compositional_role, which binds to ARCH-016 roles R1 to R8. Every enumeration of concrete Core or Landscape models is illustrative and non-normative: the normative set is the registry contents. Cites ARCH-002, ARCH-003, ARCH-009, ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013. v0.2 is an additive, backward-compatible extension: it keeps every v0.1 constraint and adds two optional facet fields over the two orthogonal facet axes of the unified registry, cluster (what a thing is, one of the fifteen ontological clusters, codes from facets/clusters.yaml) and a refined industry (which sector uses or governs it, codes from facets/industry.yaml, the vercy-industry scheme). Neither is required, so every v0.1 record still validates; a record gains its facets when they are added. The industry axis and the cluster axis are orthogonal, and government-public-sector is one industry vertical, not a privileged axis.",
+  "$id": "https://ver.cy/registry/schema/0.3/registry-node.schema.json",
+  "title": "Registry node (unified registry entry, superset profile) v0.3",
+  "description": "The unified registration record of the ELMM registry: the single home where the Meta-Universe registry entry (entry.schema.json, the B5 live register) and the MMDG node profile (mmdg-node.schema.json, the B3 dependency graph) converge into one file. An entry that validates against this schema carries BOTH the upstream-required registry fields (id, name, publisher, owner, version, kind, status, license, access, purpose, registered, and source when access is public) AND the MMDG profile fields (csn, primary_namespace, role, fingerprint, source, steward, sync_contract, exports, requires, display_alias, with optional industry, origin, provenance, routing_hints), so the same record serves discovery and composition at once. This schema is a superset: it inlines the upstream constraints (no remote references, so CI validates offline) and adds the profile constraints, and it does not forbid additional properties, so an entry projected to the upstream field set validates the upstream schema and the same entry validates the MMDG profile. The one lifecycle exception is status: the records carry the MMDG profile term active, which the upstream-field projection maps onto stable pending the upstream change request that adds active to the entry vocabulary. Identity is registry id plus Canonical Semantic Name (ARCH-003) with version per ARCH-002; the semantic pin is the Semantic Fingerprint per ARCH-009 over the MUIF canonical form, never a byte hash. The node-level role holds the triad core, landscape, kernel and is the MMDG-normative field; kind is the upstream registry scope class and is a projection of role (core maps to domain, landscape maps to enterprise, kernel maps to enterprise). The node-level role is distinct from the edge-level compositional_role, which binds to ARCH-016 roles R1 to R8. Every enumeration of concrete Core or Landscape models is illustrative and non-normative: the normative set is the registry contents. Cites ARCH-002, ARCH-003, ARCH-009, ARCH-014, ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013. v0.3 is an additive, backward-compatible extension of v0.2: it keeps every v0.2 constraint (which itself kept every v0.1 constraint) and adds four optional fields carrying the external-to-internal instantiation record (B6): tenant (the tenant that instantiated the model), derived_from (the external standard this internal model was instantiated from, the lineage head per Provenance-Graph), external_binding (the AISMM external_binding block, the same shape as software-meta-model aismm-external-binding.schema.json, declaring how the external standard is composed per ARCH-016), and applied_policies (the policy identifiers overlaid at instantiation per ARCH-014, including the IC-1 to IC-8 invariant controls). None of the four is required, so every v0.2 record and every v0.1 record still validates; an internal model produced by the external-to-internal transform carries all four.",
   "type": "object",
   "properties": {
     "id": {
@@ -213,6 +213,103 @@
         }
       },
       "description": "Optional declared trigger predicates for step 1 of the resolution algorithm. Profile field; typically declared by Landscape records. v0.1 routing is declared hints only."
+    },
+    "tenant": {
+      "type": "string",
+      "description": "Optional tenant that instantiated this internal model through the external-to-internal transform (B6). Set on models produced by tools/instantiate.py; the same value is the steward of the instantiated record and the mastership declarant. Free string keyed to the tenant registry. v0.3 field, optional, so records without it still validate."
+    },
+    "derived_from": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional lineage head: the external standard this internal model was instantiated from, recorded per Provenance-Graph so the internal node points back to its external source. Present on models produced by the external-to-internal transform (B6). The bound external content is mirrored-external per IC-3: data, never instructions. v0.3 field, optional.",
+      "properties": {
+        "registry_ref": {
+          "type": "string",
+          "description": "Pointer into the external standards catalogue: the Acronym, or the Name when no Acronym, of the source row in external/external-standards.csv."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the external standard, the source row Name."
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The external standard's SpecificationSourceURL, the master per ARCH-018."
+        },
+        "compositional_role": {
+          "type": "string",
+          "description": "The external standard's CompositionalRole classification (R1 to R8 per ARCH-016) that drove the binding's composition_kind."
+        },
+        "transform": {
+          "const": "external-to-internal",
+          "description": "The deterministic transform that produced this node: Extension-Model plus Policy-Consistency (ARCH-014) plus Data-Mastership (ARCH-018), made a single operation."
+        }
+      }
+    },
+    "external_binding": {
+      "type": "object",
+      "required": ["target", "composition_kind", "link_type", "standard_id", "version"],
+      "additionalProperties": true,
+      "description": "Optional AISMM external_binding block, the same shape as software-meta-model aismm-external-binding.schema.json (see aismm-external-model-binding.md). Declares how the external standard is composed into this internal model per ARCH-016. Present on models produced by the external-to-internal transform (B6). v0.3 field, optional.",
+      "properties": {
+        "target": {
+          "type": "string",
+          "description": "What is bound: an AISMM entity ID or a field path."
+        },
+        "composition_kind": {
+          "type": "string",
+          "enum": ["attribute", "value_object", "entity", "code", "facet"],
+          "description": "The concept-kind from the rubric (aismm-external-model-binding.md section 2). Resolved from the external standard's CompositionalRole: R1 value_object, R2 and R3 code, R4 entity, R5 facet, R6 and R7 entity, R8 attribute."
+        },
+        "link_type": {
+          "type": "string",
+          "enum": ["embed", "reference", "mixin", "extend", "align", "annotate"],
+          "description": "The composition mechanism (section 3). Resolved from the external standard's DefaultLinkType: EMBED embed, REFERENCE reference, MIX-IN mixin, ALIGN align, EXTEND extend, COMPOSE reference, N/A annotate. The value_object conditional forces embed."
+        },
+        "standard_id": {
+          "type": "string",
+          "description": "The external standard name or acronym as catalogued in the registry."
+        },
+        "version": {
+          "type": "string",
+          "description": "Pinned version of the external standard."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Canonical URI prefix or identifier scheme, the external standard's NamespaceURI."
+        },
+        "semantic_package": {
+          "type": "string",
+          "pattern": "^.+@.+$",
+          "description": "The Semantic Package name@version this import belongs to (Extension-Model)."
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "Optional Semantic Fingerprint of the imported shape."
+        },
+        "registry_ref": {
+          "type": "string",
+          "description": "Optional pointer into the registry, the external-standards.csv row."
+        },
+        "connector": {
+          "type": "string",
+          "description": "Optional curated connector name from the Meta-Universe Connector Catalogue."
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "composition_kind": { "const": "value_object" } } },
+          "then": { "properties": { "link_type": { "const": "embed" } } }
+        }
+      ]
+    },
+    "applied_policies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional list of policy identifiers overlaid on this model at instantiation per ARCH-014 Policy-Consistency, including the IC-1 to IC-8 invariant controls of the Common Operating Law and the policy profile's own policy ids. Present on models produced by the external-to-internal transform (B6). v0.3 field, optional."
     },
     "conformance": {
       "type": "object",

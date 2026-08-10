@@ -89,6 +89,15 @@
     },
     {
       "cluster": [],
+      "industry": [
+        "healthcare-life-sciences"
+      ],
+      "name": "HL7 FHIR",
+      "origin": "internal",
+      "ref": "acme.fhir"
+    },
+    {
+      "cluster": [],
       "group": "Finance & Insurance",
       "industry": [
         "financial-services"
@@ -14458,7 +14467,7 @@
       "foundation-semantics": 107,
       "geospatial-temporal": 80,
       "government-public-sector": 57,
-      "healthcare-life-sciences": 98,
+      "healthcare-life-sciences": 99,
       "hospitality-tourism": 16,
       "identity-security-privacy": 45,
       "immersive-3d": 37,
@@ -14483,7 +14492,7 @@
     },
     "by_origin": {
       "external": 1180,
-      "internal": 4
+      "internal": 5
     },
     "by_role": {
       "R1": 9,
@@ -14499,7 +14508,7 @@
   "generated_from": "entries/*.yaml (internal) and external/external-standards.csv (external), faceted by facets/industry.yaml, facets/clusters.yaml, facets/compositional-roles.yaml and facets/link-types.yaml. Deterministic build (no timestamps): re-running yields byte-identical output.",
   "totals": {
     "external": 1180,
-    "internal": 4,
-    "total": 1184
+    "internal": 5,
+    "total": 1185
   }
 }
