@@ -85,3 +85,6 @@ requires:
   - id: vercy.apmm
     kind: task
     min_version: "0.1.0"
+  - id: vercy.oumm
+    kind: org-unit
+    min_version: "0.1.0"

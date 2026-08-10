@@ -22,5 +22,17 @@
     "declared_by": "vercy.plmm",
     "observed_at": "2026-08-10T00:00:00Z",
     "note": "PLMM refers to kinds declared in APMM's exports, named in this edge's kinds field and checked by CI export coverage. Reference only: APMM stays independently owned and versioned, and only APMM defines semantics for identifiers in its namespace (ARCH-018 as a reasoning rule). declared_min equals the matching role and task min_version entries in plmm's requires."
+  },
+  {
+    "from": "vercy.plmm",
+    "to": "vercy.oumm",
+    "edge_type": "references",
+    "declared_min": "0.1.0",
+    "compositional_role": "R4",
+    "kinds": ["org-unit"],
+    "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
+    "declared_by": "vercy.plmm",
+    "observed_at": "2026-08-10T12:00:00Z",
+    "note": "PLMM's Business Unit is an org-unit; PLMM references the OUMM org-unit kind rather than re-defining it."
   }
 ]

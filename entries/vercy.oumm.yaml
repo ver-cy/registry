@@ -1,0 +1,61 @@
+# Unified Model Registration Record: OUMM
+# Virtual path: registry/entries/vercy.oumm.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (see orkestron.aismm.yaml header for the
+# convergence rationale and the change-request track). role is the
+# MMDG-normative field; role core maps to kind domain.
+#
+# OUMM is a Core model: the org-unit primitive that other models resolve
+# to rather than re-define. It composes no other model and is composed or
+# referenced by Landscape models by reference. Its exports are the kinds a
+# consumer references (org-unit, reporting-line, established-position,
+# unit-mandate); PLMM references org-unit from its Business Unit grain.
+# The export list is illustrative per ARCH-002 and ARCH-003; the normative
+# set is what this registry holds. Identity is registry id plus CSN plus
+# Namespace (ARCH-003); the semantic pin is the Semantic Fingerprint
+# (ARCH-009) over the canonical form, never a byte hash.
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.oumm
+name: Org-Unit Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: domain
+license: Apache-2.0
+access: public
+purpose: >-
+  Core meta-model for the organizational unit as one canonical primitive.
+  It models units, reporting lines, established positions and unit
+  mandates, and shows the scattered ecosystem descriptions resolving to
+  the same org-unit at different grains and contexts.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: org-unit
+primary_namespace: oumm
+display_alias: OUMM
+role: core
+version: "0.1.0"
+status: draft
+origin: internal
+fingerprint: "mufp:b7f4e2a10c93d856"
+source:
+  repository: https://github.com/ver-cy/org-unit
+steward: Vercy maintainers
+sync_contract:
+  mode: git
+  freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. An org-unit primitive is
+# foundation-and-semantics substrate; as a thing it is an organizations model.
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
+exports:
+  - org-unit
+  - reporting-line
+  - established-position
+  - unit-mandate
+requires: []

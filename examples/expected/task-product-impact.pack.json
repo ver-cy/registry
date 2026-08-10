@@ -24,9 +24,17 @@
       "content": "Summary projection anchored on apmm.role. Purpose: Public Core meta-model for professional intelligence: roles, tasks, knowledge items and precedence rules. Substance derived from a restricted-access source specification recorded as provenance. Exported kinds: role, task, knowledge-item, precedence-rule. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
       "provenance": "Projected from vercy.apmm 0.1.0 (mufp:4b8e21c9d05f7a36), source ref v0.1.0, registry uncommitted.",
       "tokens": 108
+    },
+    {
+      "model_id": "vercy.oumm",
+      "anchor": "oumm.org-unit",
+      "form": "summary",
+      "content": "Summary projection anchored on oumm.org-unit. Purpose: Core meta-model for the organizational unit as one canonical primitive. It models units, reporting lines, established positions and unit mandates, and shows the scattered ecosystem descriptions resolving to the same org-unit at different grains and contexts. Exported kinds: org-unit, reporting-line, established-position, unit-mandate. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
+      "provenance": "Projected from vercy.oumm 0.1.0 (mufp:b7f4e2a10c93d856), source ref unspecified, registry uncommitted.",
+      "tokens": 130
     }
   ],
-  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 344 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
+  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role, oumm.org-unit as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 474 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
   "version_pins": [
     {
       "id": "vercy.plmm",
@@ -42,6 +50,11 @@
       "id": "vercy.apmm",
       "version": "0.1.0",
       "semantic_fingerprint": "mufp:4b8e21c9d05f7a36"
+    },
+    {
+      "id": "vercy.oumm",
+      "version": "0.1.0",
+      "semantic_fingerprint": "mufp:b7f4e2a10c93d856"
     }
   ],
   "provenance": {
@@ -51,17 +64,19 @@
       "registry_ref: uncommitted",
       "observed_at: 2026-08-09T10:15:00Z",
       "task_ref: task-product-impact-0001",
-      "loaded 5 records and 2 edges",
+      "loaded 6 records and 3 edges",
       "route: plmm.product -> vercy.plmm (primary_namespace plmm, exports product)",
       "route: aismm.software-product -> orkestron.aismm (primary_namespace aismm, exports software-product)",
       "seed set: vercy.plmm, orkestron.aismm",
       "walk: composes vercy.plmm -> orkestron.aismm (kinds software-product, entity)",
       "walk: references vercy.plmm -> vercy.apmm (kinds role, task)",
-      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm",
+      "walk: references vercy.plmm -> vercy.oumm (kinds org-unit)",
+      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm, vercy.oumm",
       "mvs: vercy.plmm no participating minimum, registered 0.2.0 -> 0.2.0",
       "mvs: orkestron.aismm max declared minimum 3.1.0, registered 3.1.0 -> 3.1.0",
       "mvs: vercy.apmm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
-      "budget: 344 of 8000 tokens"
+      "mvs: vercy.oumm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
+      "budget: 474 of 8000 tokens"
     ]
   },
   "observed_at": "2026-08-09T10:15:00Z",
