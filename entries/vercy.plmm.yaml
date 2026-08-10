@@ -1,0 +1,79 @@
+# Unified Model Registration Record: PLMM
+# Virtual path: registry/entries/vercy.plmm.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (see orkestron.aismm.yaml header for the
+# convergence rationale and the change-request track). role is the
+# MMDG-normative field; role landscape maps to kind enterprise.
+#
+# PLMM is the single Landscape example in v0.1: an orchestration model
+# that composes Core models around the product landscape and declares
+# routing hints for the resolver's entry stage. Its requires list names
+# one entry per referenced foreign kind, minimum versions only:
+# resolution is Minimal Version Selection (per-model maximum of declared
+# minimums, major versions as distinct identities). Any upper bound is a
+# publish-time V-gate predicate, never a resolver input. CI enforces that
+# each requires min_version equals the declared_min of the corresponding
+# MMDG edge, and that every referenced kind appears in the target's
+# exports. The export list is illustrative per ARCH-002 and ARCH-003.
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.plmm
+name: Product Landscape Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: enterprise
+license: Apache-2.0
+access: public
+purpose: >-
+  Landscape meta-model for the product portfolio. It composes Core models
+  by reference to describe products, their relationships, capabilities and
+  cross-product processes, and declares routing hints for resolution.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: product-landscape-meta-model
+primary_namespace: plmm
+display_alias: PLMM
+role: landscape
+version: "0.2.0"
+status: active
+origin: internal
+fingerprint: "mufp:c31d75e8a92b40f6"
+source:
+  repository: https://github.com/ver-cy/plmm
+  ref: v0.2.0
+steward: Vercy model stewards
+sync_contract:
+  mode: git
+  freshness: PT24H
+routing_hints:
+  - match_entities:
+      - plmm.product
+      - plmm.capability
+      - plmm.cross-product-process
+    match_purpose_keywords:
+      - portfolio
+      - product landscape
+      - cross-product
+exports:
+  - product
+  - product-relationship
+  - capability
+  - cross-product-process
+  - routing-hint
+# One requires entry per referenced foreign kind. Each min_version equals
+# the declared_min of the matching edge in registry/mmdg/edges.json.
+requires:
+  - id: orkestron.aismm
+    kind: software-product
+    min_version: "3.1.0"
+  - id: orkestron.aismm
+    kind: entity
+    min_version: "3.1.0"
+  - id: vercy.apmm
+    kind: role
+    min_version: "0.1.0"
+  - id: vercy.apmm
+    kind: task
+    min_version: "0.1.0"

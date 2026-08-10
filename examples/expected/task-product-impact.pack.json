@@ -1,0 +1,74 @@
+{
+  "task_ref": "task-product-impact-0001",
+  "member_projections": [
+    {
+      "model_id": "vercy.plmm",
+      "anchor": "plmm.product",
+      "form": "summary",
+      "content": "Summary projection anchored on plmm.product. Purpose: Landscape meta-model for the product portfolio. It composes Core models by reference to describe products, their relationships, capabilities and cross-product processes, and declares routing hints for resolution. Exported kinds: product, product-relationship, capability, cross-product-process, routing-hint. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
+      "provenance": "Projected from vercy.plmm 0.2.0 (mufp:c31d75e8a92b40f6), source ref v0.2.0, registry uncommitted.",
+      "tokens": 122
+    },
+    {
+      "model_id": "orkestron.aismm",
+      "anchor": "aismm.software-product",
+      "form": "summary",
+      "content": "Summary projection anchored on aismm.software-product. Purpose: Core domain meta-model for software products. The reference Core model whose registration record every registrant matches; it composes no other model and is composed by Landscape models by reference. Exported kinds: software-product, bundle, layer, entity, contract. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
+      "provenance": "Projected from orkestron.aismm 3.1.0 (mufp:9f2c47d1a83e50b6), source ref v3.1.0, registry uncommitted.",
+      "tokens": 114
+    },
+    {
+      "model_id": "vercy.apmm",
+      "anchor": "apmm.role",
+      "form": "summary",
+      "content": "Summary projection anchored on apmm.role. Purpose: Public Core meta-model for professional intelligence: roles, tasks, knowledge items and precedence rules. Substance derived from a restricted-access source specification recorded as provenance. Exported kinds: role, task, knowledge-item, precedence-rule. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
+      "provenance": "Projected from vercy.apmm 0.1.0 (mufp:4b8e21c9d05f7a36), source ref v0.1.0, registry uncommitted.",
+      "tokens": 108
+    }
+  ],
+  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 344 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
+  "version_pins": [
+    {
+      "id": "vercy.plmm",
+      "version": "0.2.0",
+      "semantic_fingerprint": "mufp:c31d75e8a92b40f6"
+    },
+    {
+      "id": "orkestron.aismm",
+      "version": "3.1.0",
+      "semantic_fingerprint": "mufp:9f2c47d1a83e50b6"
+    },
+    {
+      "id": "vercy.apmm",
+      "version": "0.1.0",
+      "semantic_fingerprint": "mufp:4b8e21c9d05f7a36"
+    }
+  ],
+  "provenance": {
+    "registry_ref": "uncommitted",
+    "resolver": "elmm-resolver 0.1.0",
+    "routing_log": [
+      "registry_ref: uncommitted",
+      "observed_at: 2026-08-09T10:15:00Z",
+      "task_ref: task-product-impact-0001",
+      "loaded 4 records and 2 edges",
+      "route: plmm.product -> vercy.plmm (primary_namespace plmm, exports product)",
+      "route: aismm.software-product -> orkestron.aismm (primary_namespace aismm, exports software-product)",
+      "seed set: vercy.plmm, orkestron.aismm",
+      "walk: composes vercy.plmm -> orkestron.aismm (kinds software-product, entity)",
+      "walk: references vercy.plmm -> vercy.apmm (kinds role, task)",
+      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm",
+      "mvs: vercy.plmm no participating minimum, registered 0.2.0 -> 0.2.0",
+      "mvs: orkestron.aismm max declared minimum 3.1.0, registered 3.1.0 -> 3.1.0",
+      "mvs: vercy.apmm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
+      "budget: 344 of 8000 tokens"
+    ]
+  },
+  "observed_at": "2026-08-09T10:15:00Z",
+  "max_tokens": 8000,
+  "exclusions": [
+    "vercy.elmm: kernel node, not task content; the kernel declares no outgoing edges (least privilege)"
+  ],
+  "requester_identity": "agent:reference-runtime",
+  "purpose": "Assess the change impact of a product incident across software and staffing: identify the software entities the affected product depends on and the staffing roles that own the affected cross-product processes."
+}

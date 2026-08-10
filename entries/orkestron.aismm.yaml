@@ -1,0 +1,73 @@
+# Unified Model Registration Record: AISMM
+# Virtual path: registry/entries/orkestron.aismm.yaml
+#
+# One file, two schemas. This record is the superset that carries the
+# Meta-Universe registry entry fields (entry.schema.json: id, name,
+# publisher, owner, version, kind, status, license, access, source,
+# purpose, registered) AND the MMDG node profile fields
+# (mmdg-node.schema.json: csn, role, fingerprint, primary_namespace,
+# steward, sync_contract, exports, requires, display_alias, industry,
+# origin). Upstream-shared fields keep their upstream names and shapes
+# (id, fingerprint, primary_namespace, source, steward) so the two
+# schemas converge on one document.
+#
+# Convergence is pending an upstream change-request track. role is the
+# node profile extension of change request CR-1; exports, requires and
+# sync_contract are change request CR-2. status carries the MMDG
+# lifecycle value active (ARCH-002); the upstream status enum is
+# draft, stable, deprecated, retired and maps active onto stable, so a
+# fully unmodified upstream entry.schema.json accepts this record only
+# once that same change-request track lands. Until then the projected
+# upstream field subset is what conforms to unmodified upstream; the
+# full record conforms to the node profile schema.
+#
+# role is the MMDG-normative field (core, landscape, kernel per the
+# ARCH-016 node triad); kind is the upstream registry scope class. They
+# answer different questions and coexist: role core maps to kind domain.
+#
+# AISMM is the reference Core model: it ships the template every
+# registrant matches. Enumerations of Core exports are illustrative per
+# ARCH-002 and ARCH-003; the normative set is what this registry holds.
+# Identity is registry id plus CSN plus Namespace (ARCH-003); the
+# semantic pin is the Semantic Fingerprint (ARCH-009) over the canonical
+# form, never a byte hash.
+
+# Upstream registry entry fields (entry.schema.json)
+id: orkestron.aismm
+name: Software Meta-Model
+publisher: orkestron-ai
+owner: orkestron-ai
+kind: domain
+license: Apache-2.0
+access: public
+purpose: >-
+  Core domain meta-model for software products. The reference Core model
+  whose registration record every registrant matches; it composes no
+  other model and is composed by Landscape models by reference.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: software-meta-model
+primary_namespace: aismm
+display_alias: AISMM
+role: core
+version: "3.1.0"
+status: active
+origin: external
+fingerprint: "mufp:9f2c47d1a83e50b6"
+source:
+  repository: https://github.com/orkestron-ai/software-meta-model
+  ref: v3.1.0
+steward: AISMM maintainers
+sync_contract:
+  mode: git
+  freshness: PT24H
+industry:
+  - software
+exports:
+  - software-product
+  - bundle
+  - layer
+  - entity
+  - contract
+requires: []

@@ -1,0 +1,57 @@
+# Unified Model Registration Record: ELMM
+# Virtual path: registry/entries/vercy.elmm.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (see orkestron.aismm.yaml header for the
+# convergence rationale and the change-request track). role is the
+# MMDG-normative field; role kernel maps to kind enterprise.
+#
+# ELMM is the semantic composition kernel of the enterprise landscape. It
+# registers under its own versioning and compatibility discipline like
+# every other node, and it has no compositional dependencies: requires is
+# empty and the kernel holds no outgoing edges in registry/mmdg/edges.json.
+# No composes edge leaves the kernel (kernel-owned edge vocabulary rule).
+# The registry itself gives the kernel knowledge of every node; Core
+# models never depend on the kernel, and the kernel never depends on
+# domain content. "Landscape Meta-Model" as a term is reserved for
+# Level-2 models; the kernel's role is kernel, not landscape.
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.elmm
+name: Enterprise Landscape Composition Kernel
+publisher: Vercy
+owner: Vercy
+kind: enterprise
+license: Apache-2.0
+access: public
+purpose: >-
+  Semantic composition kernel for the enterprise landscape. It defines the
+  registration record, the typed MMDG edge vocabulary, the resolution
+  algorithm and the context pack, and takes no dependency on the models it
+  composes.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: enterprise-landscape-composition-kernel
+primary_namespace: elmm
+display_alias: ELMM
+role: kernel
+version: "0.1.0"
+status: active
+origin: internal
+fingerprint: "mufp:7d0a94f2b6c8e153"
+source:
+  repository: https://github.com/ver-cy/elmm
+  ref: v0.1.0
+steward: Vercy model stewards
+sync_contract:
+  mode: git
+  freshness: PT24H
+exports:
+  - model-registration-record
+  - mmdg-edge
+  - context-pack
+  - twin-composition-snapshot
+# Empty by kernel discipline: the kernel takes no composes dependency on
+# Core models and holds no outgoing edges.
+requires: []

@@ -1,0 +1,39 @@
+# ELMM registry admission gate.
+#
+# Governance lives on the write path, and in v0.1 the write path is a pull
+# request into the registry repository and the admission gate is this workflow
+# (ELMM-I39, fail closed). It runs the four checks in registry/ci/run.py on
+# every push and pull request: schema validation, graph integrity, resolver
+# determinism and the zero-change registration guarantee.
+#
+# Working-directory aware: the job sets its working directory to the registry
+# root (the directory holding ci/, entries/, schema/, mmdg/, examples/ and
+# resolver/). If the registry is the repository root, change working-directory
+# to "." Nothing else needs to change: run.py locates the root from its own
+# location, so the checks are path independent.
+name: registry-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: registry
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pyyaml jsonschema
+
+      - name: Run the registry checks
+        run: python ci/run.py

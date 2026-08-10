@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+_snap2.json
+_pack2.json

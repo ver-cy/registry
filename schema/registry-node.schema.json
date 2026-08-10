@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.1/registry-node.schema.json",
+  "title": "Registry node (unified registry entry, superset profile)",
+  "description": "The unified registration record of the ELMM registry: the single home where the Meta-Universe registry entry (entry.schema.json, the B5 live register) and the MMDG node profile (mmdg-node.schema.json, the B3 dependency graph) converge into one file. An entry that validates against this schema carries BOTH the upstream-required registry fields (id, name, publisher, owner, version, kind, status, license, access, purpose, registered, and source when access is public) AND the MMDG profile fields (csn, primary_namespace, role, fingerprint, source, steward, sync_contract, exports, requires, display_alias, with optional industry, origin, provenance, routing_hints), so the same record serves discovery and composition at once. This schema is a superset: it inlines the upstream constraints (no remote references, so CI validates offline) and adds the profile constraints, and it does not forbid additional properties, so an entry projected to the upstream field set validates the upstream schema and the same entry validates the MMDG profile. The one lifecycle exception is status: the records carry the MMDG profile term active, which the upstream-field projection maps onto stable pending the upstream change request that adds active to the entry vocabulary. Identity is registry id plus Canonical Semantic Name (ARCH-003) with version per ARCH-002; the semantic pin is the Semantic Fingerprint per ARCH-009 over the MUIF canonical form, never a byte hash. The node-level role holds the triad core, landscape, kernel and is the MMDG-normative field; kind is the upstream registry scope class and is a projection of role (core maps to domain, landscape maps to enterprise, kernel maps to enterprise). The node-level role is distinct from the edge-level compositional_role, which binds to ARCH-016 roles R1 to R8. Every enumeration of concrete Core or Landscape models is illustrative and non-normative: the normative set is the registry contents. Cites ARCH-002, ARCH-003, ARCH-009, ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+      "description": "Stable registry identifier, dot-separated, publisher-prefixed (for example vercy.plmm). Never reused. Upstream shape inlined; the MMDG profile binds the same shape."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the model. Upstream-required field."
+    },
+    "publisher": {
+      "type": "string",
+      "description": "Who publishes the model (project or organization). Upstream-required field."
+    },
+    "owner": {
+      "type": "string",
+      "description": "The sovereign Owner of the model. Registration does not transfer ownership (ARCH-018). Upstream-required field."
+    },
+    "steward": {
+      "type": "string",
+      "description": "The accountable human or team for freshness, quality and security. Shared field: same name and shape in the upstream entry and the MMDG profile."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$",
+      "description": "Semantic version per ARCH-002. Major versions are distinct registry identities: the same model at major 4 and major 5 register as separate nodes and may coexist during migration. The upstream entry accepts any string version; this profile narrows it to semver, which still satisfies the upstream string constraint."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["foundation", "domain", "enterprise", "industry", "government", "community", "example-library"],
+      "description": "Upstream registry scope class. In the unified entry kind is the projection of the MMDG-normative role: role core projects to kind domain, role landscape projects to kind enterprise, role kernel projects to kind enterprise. role is the normative field; kind carries the registry scope class the upstream register indexes on. Upstream-required field."
+    },
+    "role": {
+      "type": "string",
+      "enum": ["core", "landscape", "kernel"],
+      "description": "The node's position in the three-level architecture: core (independently owned domain meta-model), landscape (composes Core models around one business area), kernel (the composition kernel itself). The MMDG-normative field. Distinct from the edge-level compositional_role bound to ARCH-016. Subject of upstream change request CR-1 against entry.schema.json."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "draft", "stable", "deprecated", "retired"],
+      "description": "Lifecycle status. The superset accepts the union of the two lifecycle vocabularies: the MMDG profile terms (active, deprecated, retired) that the registered records actually carry, and the upstream entry.schema.json vocabulary (draft, stable, deprecated, retired) that the upstream-field projection is validated against. active is the canonical MMDG profile term for a released, in-use model and maps onto the upstream stable; adding active to the upstream enum is recorded as an upstream change request, so until it is accepted the upstream-field projection of an active record maps active to stable before validating the unmodified entry.schema.json. A deprecated node points at its successor through a deprecated-in-favor-of edge in the MMDG edge file, per ARCH-002 deprecation; a withdrawn node is retired (the tombstone entry remains so identifiers stay resolvable)."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX identifier where possible (for example Apache-2.0). Upstream-required field."
+    },
+    "access": {
+      "type": "string",
+      "enum": ["public", "restricted"],
+      "description": "public: source openly reachable, source is required. restricted: readable only with the Owner's permission, source coordinates may be omitted. Upstream-required field. Distinct from origin, which records authorship inside or outside the registry governance domain."
+    },
+    "source": {
+      "type": "object",
+      "required": ["repository"],
+      "additionalProperties": false,
+      "description": "The authoritative source, the master per ARCH-018. Required when access is public. Upstream shape inlined; the MMDG profile binds the same shape.",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "format": "uri",
+          "description": "Repository URL of the authoritative source."
+        },
+        "path": {
+          "type": "string",
+          "description": "Path inside the repository if the model is not at the root."
+        },
+        "ref": {
+          "type": "string",
+          "description": "Pinned branch, tag or commit for reproducible fetch at resolve time."
+        }
+      }
+    },
+    "purpose": {
+      "type": "string",
+      "description": "One or two sentences: what the model is for. Upstream-required field."
+    },
+    "registered": {
+      "type": "string",
+      "format": "date",
+      "description": "Registration date. Upstream-required field."
+    },
+    "csn": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([.-][a-z0-9]+)*$",
+      "description": "Canonical Semantic Name of the model per ARCH-003. Together with the registry id this is the only normative identity of the node. Profile field."
+    },
+    "primary_namespace": {
+      "type": "string",
+      "description": "Namespace per ARCH-003. Cross-model references to this model's exported kinds are written namespace-qualified (for example plmm.product). Only the owning model defines semantics for identifiers in its own namespace (ARCH-018 as a reasoning rule). Shared field: same name in the upstream entry and the MMDG profile."
+    },
+    "fingerprint": {
+      "type": "string",
+      "description": "Semantic Fingerprint of the registered version, computed per ARCH-009 over the MUIF canonical form. This is the identity of meaning: a byte hash is never a semantic pin and appears only as a clearly labeled non-semantic transport-integrity field elsewhere. Shared field: same name in the upstream entry and the MMDG profile."
+    },
+    "sync_contract": {
+      "type": "object",
+      "required": ["mode", "freshness"],
+      "additionalProperties": false,
+      "description": "Declared synchronization contract of the record (subject of upstream change request CR-2). The resolver compares its observed_at against this declared freshness; a stale source yields a staleness flag in the pack's coverage statement and the consumer decides, per ARCH-018 freshness.",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["git", "webhook", "event_stream", "cdc", "poll"],
+          "description": "How the registry observes this source. v0.1 registries use git (pull at resolve time); the other modes are declared for forward compatibility."
+        },
+        "freshness": {
+          "type": "string",
+          "description": "Maximum acceptable staleness as an ISO-8601 duration, for example PT24H."
+        }
+      }
+    },
+    "exports": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "description": "Externally referenceable kinds this model publishes, namespace-local names. The MMDG is statically computable from exports, requires and the edge-level kinds field alone: CI rejects a cross-model reference to a kind absent from the target's exports."
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "min_version"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+            "description": "Registry id of the foreign model this model references. Inlined id shape."
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "The exported kind of the foreign model this model references, namespace-local name. CI export coverage: every kind listed here appears in the target record's exports."
+          },
+          "min_version": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$",
+            "description": "Minimum version only. Resolution is Minimal Version Selection: per-kind entries for the same foreign model roll up to the per-model maximum of declared minimums. CI enforces that this value equals the declared_min of the corresponding MMDG edge; the edge is the sole resolver input. Declared upper bounds or ranges act only as publish-time V-gate predicates and are never resolver inputs."
+          }
+        }
+      },
+      "description": "One entry per foreign kind this model references: the foreign model's registry id, the referenced exported kind, and the minimum version the reference was validated against."
+    },
+    "display_alias": {
+      "type": "string",
+      "description": "Non-normative display alias, typically the acronym. A V-gate enforces alias uniqueness within the registry; an alias colliding with a well-known external acronym is expanded on first use in every public document."
+    },
+    "industry": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional industry facet for the registry, free vocabulary, lowercase. Profile field."
+    },
+    "origin": {
+      "type": "string",
+      "enum": ["internal", "external"],
+      "description": "Optional origin facet: internal (authored inside the registry's governance domain) or external (registered from an outside publisher). Profile field. Distinct from access, which is a reachability class."
+    },
+    "provenance": {
+      "type": "string",
+      "description": "Optional free-text provenance statement, for example a restricted-access source specification recorded as provenance when the public model derives from a non-public source. Profile field."
+    },
+    "routing_hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "match_entities": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Namespace-qualified kinds (for example plmm.product) whose appearance in a task descriptor's referenced_entities selects this model into the anchor set."
+          },
+          "match_purpose_keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Keywords matched against the task descriptor's purpose."
+          }
+        }
+      },
+      "description": "Optional declared trigger predicates for step 1 of the resolution algorithm. Profile field; typically declared by Landscape records. v0.1 routing is declared hints only."
+    },
+    "conformance": {
+      "type": "object",
+      "description": "Optional upstream conformance block (MUC, MMAS, MUFP versions, claimed profile, ARCH-017 and ARCH-018 carriage, FCD level). Permitted for upstream compatibility."
+    },
+    "domains": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional upstream supported domains, free vocabulary, lowercase."
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional upstream list of registry ids this model builds on. The normative dependency statement is the MMDG edge file; this field is a flat convenience mirror."
+    },
+    "imports": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional upstream list of external standards imported."
+    },
+    "docs": {
+      "type": "string",
+      "description": "Optional upstream human documentation entry point."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional upstream free-text notes."
+    }
+  },
+  "allOf": [
+    {
+      "description": "Upstream entry required fields (entry.schema.json): the fields that make this record a valid Meta-Universe registry entry.",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "publisher",
+        "owner",
+        "version",
+        "kind",
+        "status",
+        "license",
+        "access",
+        "purpose",
+        "registered"
+      ]
+    },
+    {
+      "description": "MMDG node profile required fields (mmdg-node.schema.json): the fields that make this record a valid MMDG node.",
+      "type": "object",
+      "required": [
+        "id",
+        "csn",
+        "primary_namespace",
+        "role",
+        "version",
+        "fingerprint",
+        "source",
+        "steward",
+        "status",
+        "sync_contract",
+        "exports",
+        "requires",
+        "display_alias"
+      ]
+    },
+    {
+      "description": "Upstream conditional: source is required when access is public.",
+      "if": {
+        "type": "object",
+        "properties": { "access": { "const": "public" } },
+        "required": ["access"]
+      },
+      "then": {
+        "type": "object",
+        "required": ["source"]
+      }
+    }
+  ]
+}

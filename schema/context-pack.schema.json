@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.1/context-pack.schema.json",
+  "title": "Context pack (resolver output)",
+  "description": "The bounded execution context the ELMM resolver emits for one task. Each member projection is a projection per CORE-009 (virtual projections per CORE-012) and references exactly one Meta-Object, satisfying OBJ-R29; the pack as a whole is a Composite Projection, filed upstream as a change request rather than forked locally. The pack obeys seven context rules: single anchor, minimal-sufficient content, projections not objects, provenance plus version pins (every member carries provenance, the pack carries version pins), least privilege, no secrets, just-in-time dereference (identifiers plus short summaries, detail pulled on demand). Version pins carry the Semantic Fingerprint per ARCH-009, never a byte hash. Exactly one economic parameter exists, max_tokens: when the assembled members exceed the budget, the resolver degrades members to summary form and records the degradation in the coverage statement. The pack carries requester_identity and purpose; the projection builder is the enforcement point for any future entitlement mapping, with deny by default when a declared mapping cannot be evaluated. observed_at is supplied by the resolver from its input, never from a wall clock, so a resolution is bit-reproducible. Inlined for offline validation: model ids use the inlined registry id pattern rather than a remote reference.",
+  "type": "object",
+  "required": [
+    "task_ref",
+    "member_projections",
+    "coverage_statement",
+    "version_pins",
+    "provenance",
+    "observed_at",
+    "max_tokens",
+    "exclusions",
+    "requester_identity",
+    "purpose"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "task_ref": {
+      "type": "string",
+      "description": "Reference to the task descriptor this pack was resolved for. Taken from the descriptor's task_ref, or minted by the resolver when the descriptor omits it."
+    },
+    "member_projections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["model_id", "anchor", "form", "provenance"],
+        "additionalProperties": false,
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+            "description": "Registry id of the model this member projects from. Inlined id shape."
+          },
+          "anchor": {
+            "type": "string",
+            "description": "Namespace-qualified CSN of the single Meta-Object this member projects. Exactly one anchor per member (OBJ-R29, CORE-009)."
+          },
+          "form": {
+            "type": "string",
+            "enum": ["full", "summary"],
+            "description": "full: the projected content in minimal-sufficient depth. summary: identifiers plus short summaries under the just-in-time dereference rule; the consumer asks for more."
+          },
+          "content": {
+            "type": "string",
+            "description": "The projected content in the declared form. Projections, not objects: the member never embeds the source model wholesale."
+          },
+          "provenance": {
+            "type": "string",
+            "description": "Source and derivation of this member: the model version and Semantic Fingerprint it was projected from and the fetch point. Every member carries provenance (context rule four); the pack additionally carries pack-level provenance and version pins."
+          },
+          "tokens": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Estimated token cost of this member, counted against max_tokens."
+          }
+        }
+      },
+      "description": "Ordered member projections. The order is the assembly order of the Composite Projection."
+    },
+    "coverage_statement": {
+      "type": "string",
+      "description": "What the pack covers, what was delivered in summary form, and any budget degradation that occurred. The consumer's contract for what it may assume is present."
+    },
+    "version_pins": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "semantic_fingerprint"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+            "description": "Registry id of the resolved model. Inlined id shape."
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+          },
+          "semantic_fingerprint": {
+            "type": "string",
+            "minLength": 8,
+            "description": "Semantic Fingerprint per ARCH-009. The semantic pin; never a byte hash."
+          }
+        }
+      },
+      "description": "One pin per resolved model, the result of Minimal Version Selection over declared minimums."
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["registry_ref"],
+      "properties": {
+        "registry_ref": {
+          "type": "string",
+          "description": "The registry repository state this resolution read, for example a git commit. Git commit identifiers suffice as provenance in v0.1."
+        },
+        "resolver": {
+          "type": "string",
+          "description": "Resolver implementation and version."
+        },
+        "routing_log": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Every resolution decision, logged: hint matches, edge walk, version selection."
+        }
+      },
+      "description": "How this pack came to be. Provenance plus version pins is a normative context rule; every member additionally carries its own provenance."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the resolver last observed the sources, supplied from resolver input, never a wall clock. Compared against each model's declared sync_contract freshness; a stale pack is emitted with a staleness flag in the coverage statement and the consumer decides, per ARCH-018 freshness."
+    },
+    "max_tokens": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The token budget for the whole pack. The single economic parameter in v0.1."
+    },
+    "exclusions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What was deliberately left out and why: least privilege and minimal-sufficient made auditable."
+    },
+    "requester_identity": {
+      "type": "string",
+      "description": "The identity the pack was resolved for. The identity-bound policy attaches here; enforcement happens in the projection builder, not in the consumer."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Declared purpose of the task. Carried for purpose limitation and audit."
+    }
+  }
+}

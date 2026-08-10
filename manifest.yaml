@@ -1,0 +1,118 @@
+# Registry traversal manifest (ARCH-017)
+# The machine-readable entry point of the ELMM registry repository. Every walk
+# of this repository, by a human or by an agent, starts at BOOTSTRAP.md and then
+# reads this manifest. Files not listed here are non-normative. This is the
+# unified home where the live register (discovery) and the MMDG (composition)
+# converge: one entry file per model satisfies both the upstream registry entry
+# shape and the MMDG node profile at once. Cites ARCH-002, ARCH-003, ARCH-009,
+# ARCH-016, ARCH-017, ARCH-018, CORE-009, CORE-012, FED-013.
+
+manifest_version: "0.1"
+registry: ver.cy/registry
+bootstrap: BOOTSTRAP.md
+
+# Reading order for agents:
+#   1. Parse BOOTSTRAP.md, then this manifest.
+#   2. Load every schema in schema/ (JSON Schema draft 2020-12).
+#   3. Validate every *.yaml in entries/ against schema/registry-node.schema.json
+#      and every edge in mmdg/edges.json against schema/mmdg-edge.schema.json;
+#      a validation failure means the checkout is broken, stop and report.
+#   4. Run the CI gate via ci/run.py: four checks in order, schema validation of
+#      entries and edges, graph integrity (referential integrity, export
+#      coverage, declared_min agreement, composes acyclicity, kernel isolation,
+#      unique ids), resolver determinism, and zero-change registration.
+#   5. Treat every Core and Landscape enumeration as illustrative; the normative
+#      set of models is the entries/ directory. The only normative identity is
+#      registry id plus Canonical Semantic Name (ARCH-003) with version per
+#      ARCH-002 and Semantic Fingerprint per ARCH-009.
+
+paths:
+  - path: entries/
+    kind: entries
+    description: >-
+      One YAML file per registered model, the unified registration record. Each
+      file validates against schema/registry-node.schema.json, the superset
+      profile that carries both the upstream registry entry required fields and
+      the MMDG node profile fields. The normative set of registered models is
+      exactly this directory.
+  - path: mmdg/
+    kind: mmdg
+    description: >-
+      The Meta-Model Dependency Graph. Holds edges.json, the sole normative
+      statement of the graph. Edge types are composes, references, masters-link,
+      deprecated-in-favor-of. declared_min is the sole resolver input under
+      Minimal Version Selection; version_range is a publish-time V-gate
+      predicate only.
+  - path: schema/
+    kind: schema
+    description: >-
+      JSON Schemas (draft 2020-12), inlined for offline validation with no
+      network: registry-node.schema.json (the unified entry, superset profile),
+      mmdg-edge.schema.json (the edge record), task-descriptor.schema.json,
+      context-pack.schema.json, twin-snapshot.schema.json.
+  - path: resolver/
+    kind: resolver
+    description: >-
+      The reference runtime: one deterministic resolver script implementing the
+      resolution algorithm (routing, edge walk, Minimal Version Selection) and
+      emitting a context pack plus a Twin Composition Snapshot. Bit-reproducible:
+      no wall-clock time and no randomness, all timestamps come from input,
+      snapshot_id and edges_hash are derived deterministically.
+  - path: ci/
+    kind: ci
+    description: >-
+      The four conformance checks run in order by ci/run.py on every proposed
+      change: schema validation of entries and edges; graph integrity
+      (referential integrity with both endpoints registered, export coverage
+      with every referenced kind in the target's exports, agreement between each
+      edge declared_min and the from-record requires min_version, composes
+      acyclicity, kernel isolation, unique ids); resolver determinism; and
+      zero-change registration. The write path is propose-only: change lands by
+      pull request.
+  - path: examples/
+    kind: example
+    description: >-
+      One worked example: a task descriptor with the context pack it resolves to
+      and the Twin Composition Snapshot that pins the resolution, walked end to
+      end against the seed entries and edges.
+
+# kind_rules: how a traversal tool classifies and validates each normative file.
+kind_rules:
+  - match: "entries/*.yaml"
+    kind: registry-node
+    format: yaml
+    schema: schema/registry-node.schema.json
+    description: >-
+      A unified registration record. Validates against the superset profile:
+      the upstream entry required fields (id, name, publisher, owner, version,
+      kind, status, license, access, purpose, registered, and source when access
+      is public) and the MMDG node profile fields (csn, primary_namespace, role,
+      fingerprint, source, steward, sync_contract, exports, requires,
+      display_alias, with optional industry, origin, provenance, routing_hints).
+  - match: "mmdg/edges.json"
+    kind: mmdg-edge-file
+    format: json
+    item_schema: schema/mmdg-edge.schema.json
+    description: >-
+      A JSON array of edge records; each element validates against
+      mmdg-edge.schema.json. The sole normative statement of the MMDG.
+
+traversal_rules:
+  - "Entry point. BOOTSTRAP.md is the single entry point; this manifest lists what
+    lives where. Files not listed are non-normative."
+  - "Identity. Registry ids are publisher-prefixed (for example orkestron.aismm,
+    vercy.plmm). Acronyms are display aliases only. Cross-model references carry a
+    model id and a version, or a Semantic Fingerprint."
+  - "Edges. The edge vocabulary is closed and kernel-owned: composes, references,
+    masters-link, deprecated-in-favor-of. The node field role holds core,
+    landscape, kernel; the edge field compositional_role binds to ARCH-016 roles
+    R1 to R8 and is required on composes and references edges. No composes edge
+    leaves the kernel node."
+  - "Snapshots. A resolved composition is pinned by a Twin Composition Snapshot,
+    one id, version and semantic_fingerprint per resolved model. The fingerprint
+    is the semantic pin; a byte hash never is."
+  - "Mastership. Never resolve mastership from an edge file. A masters-link edge is
+    a pointer; the authority is the owning model's ARCH-018 sources.yaml register."
+  - "Freshness. Synchronization in v0.1 is git pull. Every record declares a
+    sync_contract (mode, freshness); anything read into a context pack carries an
+    observed_at stamp supplied from resolver input."

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.1/twin-snapshot.schema.json",
+  "title": "Twin Composition Snapshot",
+  "description": "The lockfile of a resolution: which model versions were live, pinned by identity of meaning. Each resolved entry pins registry id, version and the Semantic Fingerprint per ARCH-009; the fingerprint is the semantic pin, and byte-level identifiers (source_ref, edges_hash) are clearly labeled non-semantic transport-integrity fields. source_ref is optional: a snapshot pins id, version and fingerprint, and may additionally record the source fetch point. Aligned with the ARCH-016 snapshot marking rules. snapshot_id is derived deterministically over the resolved set, the edges hash and the task_ref, never random; created_at is supplied from resolver input, never from a wall clock. Replay property: the same snapshot rebuilds the same context pack. Availability contract: a pinned snapshot remains valid offline for the declared freshness window of its members (last-known-good); new resolutions during an outage reuse the last-known-good snapshot inside its freshness window, else hard fail. Snapshots also serve composition-level time travel: which model versions were live at time T. Inlined for offline validation: resolved ids use the inlined registry id pattern rather than a remote reference.",
+  "type": "object",
+  "required": ["snapshot_id", "resolved", "edges_hash", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "snapshot_id": {
+      "type": "string",
+      "description": "Stable identifier of this snapshot, derived deterministically over the resolved set, the edges_hash and the task_ref. Never reused, never random."
+    },
+    "resolved": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "semantic_fingerprint"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+            "description": "Registry id of the resolved model. Inlined id shape."
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+          },
+          "semantic_fingerprint": {
+            "type": "string",
+            "minLength": 8,
+            "description": "Semantic Fingerprint per ARCH-009 over the MUIF canonical form. The semantic pin."
+          },
+          "source_ref": {
+            "type": "string",
+            "description": "Optional: the source repository ref (tag or commit) the model was fetched at. Non-semantic transport-integrity field; git commit identifiers suffice as provenance in v0.1."
+          }
+        }
+      },
+      "description": "Exactly one entry per resolved model major identity: the result of Minimal Version Selection."
+    },
+    "edges_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Digest of the canonicalized MMDG edge file at resolution time, sha256 over the canonical form with sorted keys and no insignificant whitespace. Non-semantic transport-integrity field, never a semantic pin."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the snapshot was created, supplied from resolver input, never a wall clock."
+    },
+    "task_ref": {
+      "type": "string",
+      "description": "Optional reference to the task descriptor whose resolution produced this snapshot."
+    }
+  }
+}

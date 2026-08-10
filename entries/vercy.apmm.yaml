@@ -1,0 +1,60 @@
+# Unified Model Registration Record: APMM
+# Virtual path: registry/entries/vercy.apmm.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (see orkestron.aismm.yaml header for the
+# convergence rationale, the change-request track, and the role vs kind
+# distinction). role is the MMDG-normative field; role core maps to kind
+# domain.
+#
+# APMM is the public Core meta-model for professional intelligence.
+# Exactly one MMDG node exists for this model. Its non-public origin is
+# recorded in the provenance field, never as a second node. The export
+# list is illustrative per ARCH-002 and ARCH-003; the normative set is
+# what this registry holds.
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.apmm
+name: Professional Intelligence Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: domain
+license: Apache-2.0
+access: public
+purpose: >-
+  Public Core meta-model for professional intelligence: roles, tasks,
+  knowledge items and precedence rules. Substance derived from a
+  restricted-access source specification recorded as provenance.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: professional-intelligence-meta-model
+primary_namespace: apmm
+display_alias: APMM
+role: core
+version: "0.1.0"
+status: active
+origin: internal
+fingerprint: "mufp:4b8e21c9d05f7a36"
+source:
+  repository: https://github.com/ver-cy/apmm
+  ref: v0.1.0
+steward: Vercy model stewards
+sync_contract:
+  mode: git
+  freshness: PT24H
+# Provenance, not a link: the source specification is a restricted-access
+# document, is not a registry node, and is not publicly citable. Only its
+# substance is carried forward into this public model.
+provenance: >-
+  Substance derived from a restricted-access source specification
+  recorded as provenance. No public link is available. The source
+  specification is not a registry node and only the owning model defines
+  semantics for identifiers in its namespace (ARCH-018 as a reasoning
+  rule).
+exports:
+  - role
+  - task
+  - knowledge-item
+  - precedence-rule
+requires: []

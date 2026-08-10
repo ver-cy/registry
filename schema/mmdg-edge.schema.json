@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.1/mmdg-edge.schema.json",
+  "title": "MMDG edge record",
+  "description": "One typed edge of the Meta-Model Dependency Graph, in the single canonical shape used by the spec, this schema, the examples and model-side manifests alike: from, to, edge_type, declared_min, optional version_range, compositional_role, kinds, optional contract_ref, fingerprint_at_registration, declared_by, observed_at, optional note. The edge vocabulary is defined as a delta over ARCH-016: each edge type maps to an ARCH-016 composition mechanism, and compositional_role binds to the ARCH-016 roles R1 to R8 (required on composes and references edges). The node-level role field holds the triad (core, landscape, kernel); the two fields answer different questions and coexist: edge_type is the relationship kind, compositional_role is how the target participates per ARCH-016. Edge semantics: composes means a Landscape orchestrates a Core model by reference, never by inclusion; references means a model refers to kinds declared in the target's exports, named in this edge's kinds field; masters-link is a pointer into the ARCH-018 mastership register (sources.yaml), never a free restatement of mastership as graph data; deprecated-in-favor-of is the successor pointer per ARCH-002 deprecation, whose declared_min names the earliest successor version. Version handling: declared_min is a minimum version only and is the sole resolver input; resolution is Minimal Version Selection (per-model maximum of declared minimums, major versions as distinct identities); version_range and any other declared compatibility predicates act only as publish-time validation predicates enforced by V-gates and never drive the resolver. CI enforces referential integrity (both endpoints registered), export coverage (every entry in kinds appears in the target record's exports), agreement between this edge's declared_min and the from-record's requires min_version for the same target and kind, acyclicity of composes, and non-empty intersection of the publish-time predicates on all edges into one model. No composes edge leaves the kernel node. Inlined for offline validation: endpoint ids use the inlined registry id pattern rather than a remote reference.",
+  "type": "object",
+  "required": [
+    "from",
+    "to",
+    "edge_type",
+    "fingerprint_at_registration",
+    "declared_by",
+    "observed_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+      "description": "Registry id of the declaring node. For composes and references this is the model that consumes; for deprecated-in-favor-of it is the deprecated node."
+    },
+    "to": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$",
+      "description": "Registry id of the target node. For deprecated-in-favor-of it is the successor."
+    },
+    "edge_type": {
+      "type": "string",
+      "enum": ["composes", "references", "masters-link", "deprecated-in-favor-of"],
+      "description": "Closed kernel-owned edge vocabulary for v0.1. Node vocabularies stay open and domain-owned; the edge vocabulary stays closed."
+    },
+    "declared_min": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$",
+      "description": "Minimum version of the target this edge was validated against; for deprecated-in-favor-of, the earliest successor version. The sole input to Minimal Version Selection. Never an upper bound: upper bounds live in version_range as publish-time V-gate predicates, not resolver inputs."
+    },
+    "version_range": {
+      "type": "string",
+      "description": "Optional declared compatibility range. Publish-time validation predicate enforced by V-gates only; never a resolver input."
+    },
+    "compositional_role": {
+      "type": "string",
+      "enum": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+      "description": "Binding of this edge to an ARCH-016 compositional role, required on composes and references edges. Bound by reference: the role semantics live in ARCH-016 and are not restated here. Never a repetition of edge_type."
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "description": "The target's exported kinds this edge references, namespace-local names. Required on references edges; permitted on composes edges. CI export coverage runs on this field: every entry appears in the target record's exports."
+    },
+    "contract_ref": {
+      "type": "string",
+      "description": "Optional reference to the composition contract governing this edge."
+    },
+    "fingerprint_at_registration": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Semantic Fingerprint per ARCH-009 of the target model version this edge was validated against at registration time. The semantic pin; never a byte hash."
+    },
+    "declared_by": {
+      "type": "string",
+      "description": "Identity of the declaring registrant, normally the registry id of the from node."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the declaration was registered and validated."
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional free-text annotation. Non-semantic: excluded from ARCH-009 canonicalization and never load-bearing for resolution."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "edge_type": { "enum": ["composes", "references"] }
+        },
+        "required": ["edge_type"]
+      },
+      "then": {
+        "required": ["declared_min", "compositional_role"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "edge_type": { "const": "references" }
+        },
+        "required": ["edge_type"]
+      },
+      "then": {
+        "required": ["kinds"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "edge_type": { "const": "deprecated-in-favor-of" }
+        },
+        "required": ["edge_type"]
+      },
+      "then": {
+        "required": ["declared_min"]
+      }
+    }
+  ]
+}

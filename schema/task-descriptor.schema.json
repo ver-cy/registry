@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.1/task-descriptor.schema.json",
+  "title": "Task descriptor (resolver input)",
+  "description": "The resolver's only input: one task, described declaratively. referenced_entities are namespace-qualified names of exported kinds (namespace.kind) and are matched against declared routing hints in step 1 of the resolution algorithm. max_tokens is the single economic parameter of v0.1. freshness_requirement is an ISO-8601 duration compared against each resolved model's declared sync_contract freshness. task_ref is optional: the resolver mints one deterministically when it is absent, and the emitted context pack and Twin Composition Snapshot carry it either way.",
+  "type": "object",
+  "required": ["purpose", "requester_identity", "referenced_entities", "max_tokens"],
+  "additionalProperties": false,
+  "properties": {
+    "task_ref": {
+      "type": "string",
+      "description": "Stable reference for this task. Optional: minted by the resolver when absent; carried into the context pack and the snapshot."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Declared purpose of the task. Matched against routing hints and carried into the pack for purpose limitation and audit."
+    },
+    "requester_identity": {
+      "type": "string",
+      "description": "The identity the context is resolved for. Carried into the pack; the projection builder is the enforcement point for any entitlement mapping, deny by default when a declared mapping cannot be evaluated."
+    },
+    "referenced_entities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+([.-][a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$",
+        "description": "Namespace-qualified name of an exported kind, for example plmm.product."
+      },
+      "description": "Namespace-qualified kinds the task touches."
+    },
+    "max_tokens": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Token budget for the whole context pack. The single economic parameter in v0.1."
+    },
+    "freshness_requirement": {
+      "type": "string",
+      "description": "Optional maximum acceptable staleness as an ISO-8601 duration, for example PT24H. A source older than this yields a staleness flag in the pack's coverage statement."
+    }
+  }
+}

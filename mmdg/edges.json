@@ -1,0 +1,26 @@
+[
+  {
+    "from": "vercy.plmm",
+    "to": "orkestron.aismm",
+    "edge_type": "composes",
+    "declared_min": "3.1.0",
+    "compositional_role": "R2",
+    "kinds": ["software-product", "entity"],
+    "fingerprint_at_registration": "mufp:9f2c47d1a83e50b6",
+    "declared_by": "vercy.plmm",
+    "observed_at": "2026-08-10T00:00:00Z",
+    "note": "PLMM orchestrates AISMM by reference, never by inclusion. edge_type is the relationship kind; compositional_role binds how the target participates to ARCH-016 (semantics not restated here). declared_min is the sole input to Minimal Version Selection and equals the matching software-product and entity min_version entries in plmm's requires. Every kind here appears in the target's exports (CI export coverage). Any upper bound PLMM cares about lives in version_range as a publish-time V-gate predicate, not a resolver input."
+  },
+  {
+    "from": "vercy.plmm",
+    "to": "vercy.apmm",
+    "edge_type": "references",
+    "declared_min": "0.1.0",
+    "compositional_role": "R4",
+    "kinds": ["role", "task"],
+    "fingerprint_at_registration": "mufp:4b8e21c9d05f7a36",
+    "declared_by": "vercy.plmm",
+    "observed_at": "2026-08-10T00:00:00Z",
+    "note": "PLMM refers to kinds declared in APMM's exports, named in this edge's kinds field and checked by CI export coverage. Reference only: APMM stays independently owned and versioned, and only APMM defines semantics for identifiers in its namespace (ARCH-018 as a reasoning rule). declared_min equals the matching role and task min_version entries in plmm's requires."
+  }
+]

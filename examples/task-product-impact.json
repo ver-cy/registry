@@ -1,0 +1,8 @@
+{
+  "task_ref": "task-product-impact-0001",
+  "purpose": "Assess the change impact of a product incident across software and staffing: identify the software entities the affected product depends on and the staffing roles that own the affected cross-product processes.",
+  "requester_identity": "agent:reference-runtime",
+  "referenced_entities": ["plmm.product", "aismm.software-product"],
+  "max_tokens": 8000,
+  "freshness_requirement": "PT24H"
+}
