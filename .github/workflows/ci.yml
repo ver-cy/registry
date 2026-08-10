@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: registry
+        working-directory: "."
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
