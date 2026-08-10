@@ -64,7 +64,7 @@
       "registry_ref: uncommitted",
       "observed_at: 2026-08-09T10:15:00Z",
       "task_ref: task-product-impact-0001",
-      "loaded 6 records and 3 edges",
+      "loaded 7 records and 5 edges",
       "route: plmm.product -> vercy.plmm (primary_namespace plmm, exports product)",
       "route: aismm.software-product -> orkestron.aismm (primary_namespace aismm, exports software-product)",
       "seed set: vercy.plmm, orkestron.aismm",
@@ -83,6 +83,7 @@
   "max_tokens": 8000,
   "exclusions": [
     "acme.fhir: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
+    "vercy.ccmm: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
     "vercy.elmm: kernel node, not task content; the kernel declares no outgoing edges (least privilege)"
   ],
   "requester_identity": "agent:reference-runtime",

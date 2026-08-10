@@ -1,0 +1,84 @@
+# Unified Model Registration Record: CCMM
+# Virtual path: registry/entries/vercy.ccmm.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (mmdg-node.schema.json). The dual-schema entry
+# convention, upstream registry fields plus MMDG node profile, is
+# documented in the registry's entry-format conventions. role is the
+# MMDG-normative field; role core maps to kind domain.
+#
+# CCMM is a Core model: the Context-Chain Meta-Model, the canonical,
+# vendor-neutral description of the layered context an agent operates
+# inside. It models the instance-data chain (Agent Core, Role Context,
+# Stream, Project, Task), the per-task knowledge stack (CCR1 to CCR7) and
+# the storage policy, and it references other Core models rather than
+# re-defining their kinds. It references APMM for the portable professional
+# knowledge and the role, and OUMM for the Role Context organization; those
+# kinds stay independently owned and versioned. The export list is
+# illustrative per ARCH-002 and ARCH-003; the normative set is what this
+# registry holds. Identity is registry id plus CSN plus Namespace
+# (ARCH-003); the semantic pin is the Semantic Fingerprint (ARCH-009) over
+# the canonical form, never a byte hash.
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.ccmm
+name: Context-Chain Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: domain
+license: Apache-2.0
+access: public
+purpose: >-
+  Core meta-model for the layered context an AI agent operates inside: the
+  instance-data chain from Agent Core through Role Context, Stream, Project
+  and Task, the per-task knowledge stack and the storage policy. It
+  references APMM for portable professional knowledge and the role, and
+  OUMM for the Role Context organization, rather than re-defining them.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: context-chain
+primary_namespace: ccmm
+display_alias: CCMM
+role: core
+version: "0.1.0"
+status: draft
+origin: internal
+fingerprint: "mufp:e5a9c17f3b0d284c"
+source:
+  repository: https://github.com/ver-cy/context-chain
+steward: Vercy maintainers
+sync_contract:
+  mode: git
+  freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. A context-structure model is
+# foundation-and-semantics substrate; as a thing it is about the knowledge
+# and information an agent assembles per task.
+industry:
+  - foundation-semantics
+cluster:
+  - knowledge-information
+exports:
+  - context-chain
+  - role-context
+  - stream
+  - project
+  - task-context
+  - storage-policy
+  - knowledge-stack
+# One requires entry per referenced foreign kind. Each min_version equals
+# the declared_min of the matching edge in registry/mmdg/edges.json, and
+# every referenced kind appears in the target record's exports. The Agent
+# Core's portable knowledge and the Role are APMM kinds the chain
+# references; the Role Context's Org is an OUMM org-unit.
+requires:
+  - id: vercy.apmm
+    kind: role
+    min_version: "0.1.0"
+  - id: vercy.apmm
+    kind: knowledge-item
+    min_version: "0.1.0"
+  - id: vercy.oumm
+    kind: org-unit
+    min_version: "0.1.0"
