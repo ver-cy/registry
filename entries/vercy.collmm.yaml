@@ -1,0 +1,71 @@
+# Unified Model Registration Record: CollMM
+# Virtual path: registry/entries/vercy.collmm.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (see orkestron.aismm.yaml header for the
+# convergence rationale and the change-request track). role is the
+# MMDG-normative field; role core maps to kind domain.
+#
+# CollMM is a Core model: the Collective primitive (a team or standing body
+# that holds members, member roles and a mandate and builds products) that
+# other models resolve to rather than re-define. It sits between the deferred
+# Human subject and the Organization (OUMM): a member seat is an OUMM
+# established-position and the parent unit is an OUMM org-unit, so CollMM
+# references org-unit rather than re-defining it (its only edge whose target
+# already exists). Its exports are the kinds a consumer references (collective,
+# membership, member-role, collective-mandate); PLMM references collective to
+# record which team builds each product. The export list is illustrative per
+# ARCH-002 and ARCH-003; the normative set is what this registry holds.
+# Identity is registry id plus CSN plus Namespace (ARCH-003); the semantic pin
+# is the Semantic Fingerprint (ARCH-009) over the canonical form, never a byte
+# hash. Display alias CollMM, never CMM (which collides with the live CCMM).
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.collmm
+name: Collective Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: domain
+license: Apache-2.0
+access: public
+purpose: >-
+  Core meta-model for the Collective as one canonical primitive: a team or
+  standing body that holds members, member roles and a mandate and builds
+  products. It sits between the person and the organizational unit, binding
+  member seats to OUMM established-positions and the parent unit to an OUMM
+  org-unit.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: collective
+primary_namespace: collmm
+display_alias: CollMM
+role: core
+version: "0.1.0"
+status: draft
+origin: internal
+fingerprint: "mufp:c0116ec7a91b5d24"
+source:
+  repository: https://github.com/ver-cy/collmm
+steward: Vercy maintainers
+sync_contract:
+  mode: git
+  freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. A collective primitive is
+# foundation-and-semantics substrate; as a thing it is an organizations model.
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
+exports:
+  - collective
+  - membership
+  - member-role
+  - collective-mandate
+# One requires entry per referenced foreign kind. Each min_version equals the
+# declared_min of the matching edge in registry/mmdg/edges.json.
+requires:
+  - id: vercy.oumm
+    kind: org-unit
+    min_version: "0.1.0"

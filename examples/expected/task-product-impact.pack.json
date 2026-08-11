@@ -32,9 +32,17 @@
       "content": "Summary projection anchored on oumm.org-unit. Purpose: Core meta-model for the organizational unit as one canonical primitive. It models units, reporting lines, established positions and unit mandates, and shows the scattered ecosystem descriptions resolving to the same org-unit at different grains and contexts. Exported kinds: org-unit, reporting-line, established-position, unit-mandate. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
       "provenance": "Projected from vercy.oumm 0.1.0 (mufp:b7f4e2a10c93d856), source ref unspecified, registry uncommitted.",
       "tokens": 130
+    },
+    {
+      "model_id": "vercy.collmm",
+      "anchor": "collmm.collective",
+      "form": "summary",
+      "content": "Summary projection anchored on collmm.collective. Purpose: Core meta-model for the Collective as one canonical primitive: a team or standing body that holds members, member roles and a mandate and builds products. It sits between the person and the organizational unit, binding member seats to OUMM established-positions and the parent unit to an OUMM org-unit. Exported kinds: collective, membership, member-role, collective-mandate. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
+      "provenance": "Projected from vercy.collmm 0.1.0 (mufp:c0116ec7a91b5d24), source ref unspecified, registry uncommitted.",
+      "tokens": 140
     }
   ],
-  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role, oumm.org-unit as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 474 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
+  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role, oumm.org-unit, collmm.collective as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 614 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
   "version_pins": [
     {
       "id": "vercy.plmm",
@@ -55,6 +63,11 @@
       "id": "vercy.oumm",
       "version": "0.1.0",
       "semantic_fingerprint": "mufp:b7f4e2a10c93d856"
+    },
+    {
+      "id": "vercy.collmm",
+      "version": "0.1.0",
+      "semantic_fingerprint": "mufp:c0116ec7a91b5d24"
     }
   ],
   "provenance": {
@@ -64,25 +77,30 @@
       "registry_ref: uncommitted",
       "observed_at: 2026-08-09T10:15:00Z",
       "task_ref: task-product-impact-0001",
-      "loaded 7 records and 5 edges",
+      "loaded 10 records and 9 edges",
       "route: plmm.product -> vercy.plmm (primary_namespace plmm, exports product)",
       "route: aismm.software-product -> orkestron.aismm (primary_namespace aismm, exports software-product)",
       "seed set: vercy.plmm, orkestron.aismm",
       "walk: composes vercy.plmm -> orkestron.aismm (kinds software-product, entity)",
       "walk: references vercy.plmm -> vercy.apmm (kinds role, task)",
       "walk: references vercy.plmm -> vercy.oumm (kinds org-unit)",
-      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm, vercy.oumm",
+      "walk: references vercy.plmm -> vercy.collmm (kinds collective)",
+      "walk: references vercy.collmm -> vercy.oumm (kinds org-unit)",
+      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm, vercy.oumm, vercy.collmm",
       "mvs: vercy.plmm no participating minimum, registered 0.2.0 -> 0.2.0",
       "mvs: orkestron.aismm max declared minimum 3.1.0, registered 3.1.0 -> 3.1.0",
       "mvs: vercy.apmm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
       "mvs: vercy.oumm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
-      "budget: 474 of 8000 tokens"
+      "mvs: vercy.collmm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
+      "budget: 614 of 8000 tokens"
     ]
   },
   "observed_at": "2026-08-09T10:15:00Z",
   "max_tokens": 8000,
   "exclusions": [
     "acme.fhir: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
+    "deploy.aismm-product: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
+    "deploy.portfolio: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
     "vercy.ccmm: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
     "vercy.elmm: kernel node, not task content; the kernel declares no outgoing edges (least privilege)"
   ],

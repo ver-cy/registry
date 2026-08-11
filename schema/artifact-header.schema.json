@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/registry/schema/0.1/artifact-header.schema.json",
+  "title": "Artifact header (standard front-matter block) v0.1",
+  "description": "The standard front-matter header block carried at the top of every governed artifact in a vercy-family meta-model: every Finding file, layer file, bundle README and root doc. It is the artifact-level face of ARCH-002 (versioning and lifecycle) and CON-6 (versioning and change history), and its change_history is append-only per IC-8: entries are added, never rewritten or removed, so the header is itself the artifact's memory. Identity is a stable ARCH-003 identifier: the paired naming rule (a candidate ARCH-003 clause, see registry/conventions/README.md CR-A) is that filenames carry the stable identifier and semantic name only and dates SHALL NOT appear in filenames; the date, the authors and the change history live in this header block. Superseding an artifact does not rename its file: it flips status and appends a change_history entry, preserving the ARCH-009 fingerprint over canonical form. This schema validates offline (no remote references) so registry CI can run it without network access. It is a reusable standard artifact, not tied to any one model. Cites ARCH-002, ARCH-003, ARCH-009, IC-8, CON-6.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "status",
+    "change_history"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([._/-][a-z0-9]+)*$",
+      "description": "Stable ARCH-003 identifier of the artifact, publisher- or namespace-prefixed, lowercase, dot/slash/hyphen separated (for example collmm.02-membership or collmm/model/02-membership). Never reused and never rewritten. Per the CR-A naming clause it carries no date and no version: time and authorship live only in change_history. The id, title and status fields are IC-4 adjacent and do not ride the auto-approval lane."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable title of the artifact."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "retired"
+      ],
+      "description": "Lifecycle status per ARCH-002. draft: authored, not yet released. active: released and in use. deprecated: superseded, points at its successor and is kept resolvable. retired: withdrawn tombstone, kept so the identifier stays resolvable. Superseding an artifact flips this field and appends a change_history entry rather than renaming the file."
+    },
+    "change_history": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Append-only change log per IC-8, newest last. At least one entry (the genesis entry) is required. Entries are added, never rewritten or removed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "author",
+          "summary"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO-8601 calendar date (YYYY-MM-DD) of the change. This is where the date lives: it appears here, never in the filename."
+          },
+          "author": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The role or person that made the change, per the COMMON role vocabulary."
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One line describing the change. Carries a MIR-10 reason code where the change is a correction or retraction."
+          }
+        }
+      }
+    },
+    "owners": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Optional accountable owners of the artifact (roles or teams, per the COMMON role vocabulary). Absent means the artifact inherits its owner from the model."
+    },
+    "source_layer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional identifier of the layer this artifact belongs to, for Findings and sub-layer artifacts that resolve upward to an owning layer."
+    }
+  }
+}

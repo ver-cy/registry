@@ -9,6 +9,7 @@ Runs, in order:
     check_zero_change    the zero-change registration guarantee (ELMM-I7, ELMM-I44)
     check_facets         facet vocabulary and generated-artifact integrity (ARCH-017)
     check_instantiations B6 external-to-internal transform integrity (ARCH-014/016/018, IC-1)
+    check_conventions    scaffold-convention integrity (S1 header + no-date rule, S2)
 
 The first four are the walking-skeleton kernel checks. check_facets is the
 unified-registry extension: it guards the two orthogonal facet axes (cluster and
@@ -18,7 +19,11 @@ check_instantiations is the B6 extension: it guards each committed
 external-to-internal instantiation (schema, internal entry, external resolution,
 policy overlay, industry inheritance, IC-1 mastership) and proves the transform
 is replayable byte for byte. It passes vacuously until the first instantiation
-is committed.
+is committed. check_conventions is the standard-scaffold extension: it gives the
+S1/S2 backlog items their acceptance tests, guarding the artifact header schema
+(a valid JSON Schema), the no-date-in-filename rule over entries/, mmdg/ and
+schema/, and the documented-conventions readme. It passes with a note while a
+convention does not yet apply.
 
 Prints a per-check summary and exits non-zero if any check failed. This is the
 fail-closed admission gate on the registry write path (ELMM-I39): the whole
@@ -40,6 +45,7 @@ CHECKS = (
     "check_zero_change.py",
     "check_facets.py",
     "check_instantiations.py",
+    "check_conventions.py",
 )
 
 

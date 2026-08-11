@@ -2834,6 +2834,28 @@
       "role": "R8"
     },
     {
+      "cluster": [
+        "knowledge-information"
+      ],
+      "industry": [
+        "foundation-semantics"
+      ],
+      "name": "Deployment Site Product",
+      "origin": "internal",
+      "ref": "deploy.aismm-product"
+    },
+    {
+      "cluster": [
+        "organizations"
+      ],
+      "industry": [
+        "foundation-semantics"
+      ],
+      "name": "Deployment Site Portfolio",
+      "origin": "internal",
+      "ref": "deploy.portfolio"
+    },
+    {
       "cluster": [],
       "group": "Telecom Billing, Roaming & Numbering",
       "industry": [
@@ -13533,6 +13555,17 @@
       "industry": [
         "foundation-semantics"
       ],
+      "name": "Collective Meta-Model",
+      "origin": "internal",
+      "ref": "vercy.collmm"
+    },
+    {
+      "cluster": [
+        "organizations"
+      ],
+      "industry": [
+        "foundation-semantics"
+      ],
       "name": "Enterprise Landscape Composition Kernel",
       "origin": "internal",
       "ref": "vercy.elmm"
@@ -14470,8 +14503,8 @@
   ],
   "facets": {
     "by_cluster": {
-      "knowledge-information": 2,
-      "organizations": 4,
+      "knowledge-information": 3,
+      "organizations": 6,
       "people-groups": 1
     },
     "by_industry": {
@@ -14486,7 +14519,7 @@
       "education-skills": 24,
       "energy-utilities": 26,
       "financial-services": 65,
-      "foundation-semantics": 109,
+      "foundation-semantics": 112,
       "geospatial-temporal": 80,
       "government-public-sector": 57,
       "healthcare-life-sciences": 99,
@@ -14514,7 +14547,7 @@
     },
     "by_origin": {
       "external": 1180,
-      "internal": 7
+      "internal": 10
     },
     "by_role": {
       "R1": 9,
@@ -14530,7 +14563,7 @@
   "generated_from": "entries/*.yaml (internal) and external/external-standards.csv (external), faceted by facets/industry.yaml, facets/clusters.yaml, facets/compositional-roles.yaml and facets/link-types.yaml. Deterministic build (no timestamps): re-running yields byte-identical output.",
   "totals": {
     "external": 1180,
-    "internal": 7,
-    "total": 1187
+    "internal": 10,
+    "total": 1190
   }
 }

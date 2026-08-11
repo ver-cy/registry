@@ -1,0 +1,77 @@
+# Illustrative internal Model Registration Record: the deployment site's portfolio.
+# Example instance (like acme.fhir): a Landscape model at a deployment site that
+# composes the site's product (deploy.aismm-product) and references the owning
+# org-unit (vercy.oumm), closing AISMM to PLMM at instance grain with no new edge
+# type. Anonymized tenant 'deploy'; the source repository is a placeholder. An
+# example of the instance-registration pattern, not a live model.
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the MMDG
+# node profile fields (see orkestron.aismm.yaml header for the convergence
+# rationale and the change-request track). role is the MMDG-normative field;
+# role landscape maps to kind enterprise.
+#
+# Data convention: each plmm.product entry in this portfolio carries a Finding
+# naming its aismm.software-product id and a Finding naming its owning
+# oumm.org-unit id (see plmm/conventions/product-data-convention.md). The
+# build/ownership verb is a Finding in the Relationships layer; the edge stays
+# generic (composes to the product, references to the org-unit).
+
+# Upstream registry entry fields (entry.schema.json)
+id: deploy.portfolio
+name: Deployment Site Portfolio
+publisher: deploy
+owner: deploy
+kind: enterprise
+license: Apache-2.0
+access: public
+purpose: >-
+  Illustrative Landscape instance for a single deployment site's product
+  portfolio. It composes the site's AISMM product and references the owning
+  org-unit, closing AISMM to PLMM at the deployment site with no new edge type.
+  An example of the instance-registration pattern, not a live model.
+registered: "2026-08-10"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: deployment-site-portfolio
+primary_namespace: deploy.portfolio
+display_alias: DeployPortfolio
+role: landscape
+version: "0.1.0"
+status: draft
+origin: internal
+tenant: deploy
+fingerprint: "mufp:de90f0170a91c3b5"
+source:
+  repository: https://example.invalid/deploy/portfolio
+steward: deploy
+sync_contract:
+  mode: git
+  freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. A product portfolio is
+# foundation-and-semantics substrate; as a thing it composes and describes
+# organizations and their products.
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
+routing_hints:
+  - match_entities:
+      - plmm.product
+    match_purpose_keywords:
+      - portfolio
+      - product landscape
+exports:
+  - product
+# One requires entry per referenced foreign kind. Each min_version equals the
+# declared_min of the matching edge in registry/mmdg/edges.json.
+requires:
+  - id: deploy.aismm-product
+    kind: software-product
+    min_version: "0.1.0"
+  - id: deploy.aismm-product
+    kind: entity
+    min_version: "0.1.0"
+  - id: vercy.oumm
+    kind: org-unit
+    min_version: "0.1.0"

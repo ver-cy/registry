@@ -58,5 +58,53 @@
     "declared_by": "vercy.ccmm",
     "observed_at": "2026-08-10T12:00:00Z",
     "note": "The Role Context's Org is an OUMM org-unit."
+  },
+  {
+    "from": "deploy.portfolio",
+    "to": "deploy.aismm-product",
+    "edge_type": "composes",
+    "declared_min": "0.1.0",
+    "compositional_role": "R2",
+    "kinds": ["software-product", "entity"],
+    "fingerprint_at_registration": "mufp:de91073d0c7a5b46",
+    "declared_by": "deploy.portfolio",
+    "observed_at": "2026-08-10T12:00:00Z",
+    "note": "Illustrative instance edge: the deployment site's portfolio orchestrates its own AISMM product by reference, closing AISMM to PLMM at instance grain. declared_min equals the matching software-product and entity min_version entries in deploy.portfolio's requires; both kinds appear in deploy.aismm-product's exports (CI export coverage). No new edge type: this is the existing composes vocabulary."
+  },
+  {
+    "from": "deploy.portfolio",
+    "to": "vercy.oumm",
+    "edge_type": "references",
+    "declared_min": "0.1.0",
+    "compositional_role": "R4",
+    "kinds": ["org-unit"],
+    "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
+    "declared_by": "deploy.portfolio",
+    "observed_at": "2026-08-10T12:00:00Z",
+    "note": "The deployment site's portfolio references the owning org-unit; each product entry names its owning oumm.org-unit id as a Finding in the Relationships layer. Reference only: OUMM stays independently owned and is not re-defined here."
+  },
+  {
+    "from": "vercy.collmm",
+    "to": "vercy.oumm",
+    "edge_type": "references",
+    "declared_min": "0.1.0",
+    "compositional_role": "R4",
+    "kinds": ["org-unit"],
+    "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
+    "declared_by": "vercy.collmm",
+    "observed_at": "2026-08-10T12:00:00Z",
+    "note": "CollMM's parent unit and member seats bind to OUMM: the parent unit is an org-unit and a member seat is an established-position. CollMM references the OUMM org-unit kind rather than re-defining it. This is its only edge whose target already exists; the person-referencing edge waits for the deferred Human node."
+  },
+  {
+    "from": "vercy.plmm",
+    "to": "vercy.collmm",
+    "edge_type": "references",
+    "declared_min": "0.1.0",
+    "compositional_role": "R4",
+    "kinds": ["collective"],
+    "fingerprint_at_registration": "mufp:c0116ec7a91b5d24",
+    "declared_by": "vercy.plmm",
+    "observed_at": "2026-08-10T12:00:00Z",
+    "note": "PLMM records which team builds each product by referencing the CollMM collective kind, closing Collective to AISMM at the portfolio grain. declared_min equals the collective min_version entry appended to plmm's requires; collective appears in collmm's exports (CI export coverage). Reference only: CollMM stays independently owned and is not re-defined."
   }
 ]

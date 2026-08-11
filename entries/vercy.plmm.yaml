@@ -88,3 +88,6 @@ requires:
   - id: vercy.oumm
     kind: org-unit
     min_version: "0.1.0"
+  - id: vercy.collmm
+    kind: collective
+    min_version: "0.1.0"

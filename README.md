@@ -20,7 +20,7 @@ What this repository is **not**: it is not a copy of any model. Registration is 
 
 Everything above describes the internal meta-models: the MMDG nodes, few and governed. As of v0.2 the repository is a unified registry with a second entry class alongside them, and two facet axes that classify both classes the same way.
 
-**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are four of them. An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by the external-to-internal transform (workstream B6), described below. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
+**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are ten of them: seven governed meta-models (`orkestron.aismm`, `vercy.apmm`, `vercy.ccmm`, `vercy.oumm`, `vercy.collmm`, `vercy.plmm`, `vercy.elmm`) and three illustrative tenant instance nodes registered the same way (`acme.fhir`, `deploy.aismm-product`, `deploy.portfolio`). An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by the external-to-internal transform (workstream B6), described below. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
 
 **The two axes are orthogonal, and both apply to both classes.** They answer different questions:
 
@@ -67,7 +67,7 @@ external-models.source.csv + facets/group-industry-map.csv
 ```
 
 - `tools/import_external.py` builds the external catalogue. It fails closed if a source Group is missing from the Group map or a mapped code is not a known industry code.
-- `tools/build_index.py` builds `index/unified-index.json`, the single index that joins the four internal meta-models and the 1180 external standards into one structure keyed by the shared facets, so both classes are searchable together.
+- `tools/build_index.py` builds `index/unified-index.json`, the single index that joins the ten internal nodes and the 1180 external standards into one structure keyed by the shared facets, so both classes are searchable together.
 - `tools/query.py` reads that index and answers facet queries. Representative invocations, with the query dimensions being cluster, industry, origin, and entry class:
 
 ```
@@ -81,11 +81,11 @@ python tools/query.py --industry government-public-sector # the state as one sec
 
 ### The unified index
 
-`index/unified-index.json` is the generated join over both entry classes: the four internal meta-models and the 1180 external standards, indexed by the shared facet axes (cluster, industry) plus origin, and, for external standards, the ARCH-016 compositional role (R1 to R8). The internal core, landscape, and kernel node role is not indexed in v0.2; it lives in the entry files and is walked by the resolver, not queried through this index. It is what makes "show me everything in this sector" or "show me every entry of this ontological kind" a single lookup that crosses the internal/external boundary, while the index still records which class each entry belongs to so a consumer never mistakes a reference for a node. Like the catalogue, it is generated and byte-comparable, never authored by hand.
+`index/unified-index.json` is the generated join over both entry classes: the ten internal nodes and the 1180 external standards, indexed by the shared facet axes (cluster, industry) plus origin, and, for external standards, the ARCH-016 compositional role (R1 to R8). The internal core, landscape, and kernel node role is not indexed in v0.2; it lives in the entry files and is walked by the resolver, not queried through this index. It is what makes "show me everything in this sector" or "show me every entry of this ontological kind" a single lookup that crosses the internal/external boundary, while the index still records which class each entry belongs to so a consumer never mistakes a reference for a node. Like the catalogue, it is generated and byte-comparable, never authored by hand.
 
 ### How CI guards it
 
-The v0.1 admission gate keeps its four fail-closed checks unchanged (schema, graph, resolver, zero-change). v0.2 adds a fifth, `ci/check_facets.py`, wired into `ci/run.py`, that guards the facet layer: every industry and cluster code on an internal entry is in its vocabulary; every Group in the source catalogue is covered by the Group map and every mapped code is known; the external catalogue regenerates byte-identical and each row validates against `schema/external-standard.schema.json`; and the unified index regenerates byte-identical. A drifted vocabulary, an unmapped Group, a hand-edit of a generated file, or a non-deterministic tool all fail the gate. The numbers the gate protects: 4 internal meta-models and 2 edges; 1180 external standards across 37 Groups; 15 clusters and 27 industry codes (15 verticals plus 12 horizontals); the eight ARCH-016 roles distributed R1 9, R2 156, R3 67, R4 140, R5 55, R6 263, R7 22, R8 468.
+The v0.1 admission gate keeps its four fail-closed checks unchanged (schema, graph, resolver, zero-change). v0.2 adds a fifth, `ci/check_facets.py`, wired into `ci/run.py`, that guards the facet layer: every industry and cluster code on an internal entry is in its vocabulary; every Group in the source catalogue is covered by the Group map and every mapped code is known; the external catalogue regenerates byte-identical and each row validates against `schema/external-standard.schema.json`; and the unified index regenerates byte-identical. A drifted vocabulary, an unmapped Group, a hand-edit of a generated file, or a non-deterministic tool all fail the gate. The numbers the gate protects: 10 internal nodes and 9 edges; 1180 external standards across 37 Groups; 15 clusters and 27 industry codes (15 verticals plus 12 horizontals); the eight ARCH-016 roles distributed R1 9, R2 156, R3 67, R4 140, R5 55, R6 263, R7 22, R8 468.
 
 ## The external-to-internal transform (B6)
 
@@ -136,46 +136,67 @@ The normative account is `transform/EXTERNAL-TO-INTERNAL.md`; the default overla
 | `transform/` | The external-to-internal transform: `EXTERNAL-TO-INTERNAL.md` (the normative spec), `policy-profiles/vercy-baseline.yaml` (the default ver.cy overlay: IC-1 to IC-8, T1 default, the mastership stance), and its `README.md`. |
 | `instantiations/` | One JSON instantiation manifest per external-to-internal instantiation, recording how the external model was bound, which policies were overlaid, who masters the data, and the lineage. Generated by `tools/instantiate.py`, validated against `schema/instantiation-manifest.schema.json`. |
 
-## The seed: four records and the edges
+## The registered nodes and the edges
 
-The v0.1 seed registers exactly what exists, not the fourteen Core models and eleven Landscapes any illustrative enumeration might list. Four active records and two edges.
+The registry registers exactly what exists, not the fourteen Core models and eleven Landscapes any illustrative enumeration might list. Ten nodes and nine edges: seven governed meta-models, three illustrative tenant instance nodes, and the nine typed edges between them.
 
 | Entry | `role` | `kind` | Version | Access | Origin | What it demonstrates |
 |---|---|---|---|---|---|---|
 | `entries/orkestron.aismm.yaml` | core | domain | 3.1.0 | public | external | The reference Core model, registered from an outside publisher at `github.com/orkestron-ai/software-meta-model`. Ships the template every registrant matches. |
 | `entries/vercy.apmm.yaml` | core | domain | 0.1.0 | public | internal | The second Core model, proving the non-software case. Its substance derives from a restricted-access source specification recorded as provenance, with no link; exactly one node exists for it. |
-| `entries/vercy.plmm.yaml` | landscape | enterprise | 0.2.0 | public | internal | The single Landscape: composes AISMM, references APMM, and declares the routing hints the resolver matches. |
+| `entries/vercy.ccmm.yaml` | core | domain | 0.1.0 | public | internal | The Context-Chain Core model: the layered context an agent operates inside. References APMM (role, knowledge-item) and OUMM (org-unit) rather than re-defining them. |
+| `entries/vercy.oumm.yaml` | core | domain | 0.1.0 | public | internal | The org-unit primitive that other models resolve to rather than re-define. The shared reference target: PLMM, CCMM, CollMM and `deploy.portfolio` all reference its `org-unit` kind. |
+| `entries/vercy.collmm.yaml` | core | domain | 0.1.0 | public | internal | The Collective Core model: the team that builds a product. References OUMM (org-unit) for its parent unit and seats. |
+| `entries/vercy.plmm.yaml` | landscape | enterprise | 0.2.0 | public | internal | The single governed Landscape: composes AISMM, references APMM, OUMM and CollMM, and declares the routing hints the resolver matches. |
 | `entries/vercy.elmm.yaml` | kernel | enterprise | 0.1.0 | public | internal | The kernel, registered under its own versioning discipline, with empty `requires` and no outgoing edges. Its knowledge of every node comes from the registry, not from graph edges. |
+| `entries/acme.fhir.yaml` | core | domain | 0.1.0 | public | internal (tenant `acme`) | An illustrative B6 instantiation from an external standard. An isolated node with empty `exports` and no edges. |
+| `entries/deploy.aismm-product.yaml` | core | domain | 0.1.0 | public | internal (tenant `deploy`) | An illustrative product software model at a deployment site. A `composes` target; exports `software-product` and `entity`. |
+| `entries/deploy.portfolio.yaml` | landscape | enterprise | 0.1.0 | public | internal (tenant `deploy`) | An illustrative portfolio at a deployment site. Composes `deploy.aismm-product` and references OUMM, closing AISMM to PLMM at instance grain. |
 
-The seed is these four active models. Every enumeration of models anywhere in Vercy documentation is illustrative and non-normative. The normative set of models is whatever this registry holds at the time.
+The seven governed meta-models and the three illustrative tenant instances are what this registry holds. Every enumeration of models anywhere in Vercy documentation is illustrative and non-normative. The normative set of models is whatever this registry holds at the time.
 
 ### The MMDG as an ASCII diagram
 
 ```text
-  Level 3 (kernel)     vercy.elmm
-                       Registers nodes, validates edges, resolves
-                       compositions. Holds NO composes or references
-                       edges of its own; its knowledge of every node
-                       comes from the registry, not from graph edges.
+  Level 3 (kernel)      vercy.elmm
+                        Registers nodes, validates edges, resolves compositions.
+                        Holds NO composes or references edges of its own; its
+                        knowledge of every node comes from the registry, not
+                        from graph edges.
 
-  Level 2 (landscape)  vercy.plmm
-                        |                        \
-                composes |                          \ references
-                R2       |                            \ R4  (kinds: role, task)
-                (min 3.1.0)                            (min 0.1.0)
-                        v                                v
-  Level 1 (core)  orkestron.aismm                   vercy.apmm
+  Level 2 (landscape)   vercy.plmm                    deploy.portfolio
+                          composes ->  orkestron.aismm   composes ->  deploy.aismm-product
+                          references -> vercy.apmm        references -> vercy.oumm
+                          references -> vercy.oumm
+                          references -> vercy.collmm
 
-  Two edges in mmdg/edges.json:
-    1. vercy.plmm  composes    orkestron.aismm  (R2, declared_min 3.1.0, kinds software-product, entity)
-    2. vercy.plmm  references  vercy.apmm       (R4, declared_min 0.1.0, kinds role, task)
+  Level 1 (core)        orkestron.aismm   vercy.apmm   vercy.oumm   deploy.aismm-product
+                        vercy.ccmm  references -> vercy.apmm, vercy.oumm
+                        vercy.collmm references -> vercy.oumm
+                        acme.fhir   (isolated node, empty exports, no edges)
 
-  No composes or references edge leaves the kernel node. A shared Core
-  model is registered once and composed by many Landscapes without
-  duplication. The graph is directed and acyclic on composes.
+  vercy.oumm is the shared org-unit primitive: vercy.plmm, vercy.ccmm,
+  vercy.collmm and deploy.portfolio all reference its org-unit kind without
+  re-defining it.
+
+  Nine edges in mmdg/edges.json:
+    1. vercy.plmm       composes    orkestron.aismm       (R2, declared_min 3.1.0, kinds software-product, entity)
+    2. vercy.plmm       references  vercy.apmm            (R4, declared_min 0.1.0, kinds role, task)
+    3. vercy.plmm       references  vercy.oumm            (R4, declared_min 0.1.0, kinds org-unit)
+    4. vercy.plmm       references  vercy.collmm          (R4, declared_min 0.1.0, kinds collective)
+    5. vercy.ccmm       references  vercy.apmm            (R4, declared_min 0.1.0, kinds role, knowledge-item)
+    6. vercy.ccmm       references  vercy.oumm            (R4, declared_min 0.1.0, kinds org-unit)
+    7. vercy.collmm     references  vercy.oumm            (R4, declared_min 0.1.0, kinds org-unit)
+    8. deploy.portfolio composes    deploy.aismm-product  (R2, declared_min 0.1.0, kinds software-product, entity)
+    9. deploy.portfolio references  vercy.oumm            (R4, declared_min 0.1.0, kinds org-unit)
+
+  No composes or references edge leaves the kernel node, and acme.fhir
+  carries none. A shared Core model is registered once and referenced or
+  composed by many nodes without duplication. The graph is directed and
+  acyclic on composes.
 ```
 
-The edge vocabulary is closed and exactly four types: `composes` (a Landscape orchestrates a Core model by reference, never by inclusion, per an ARCH-016 mechanism named in `compositional_role`), `references` (a model refers to kinds declared in the target's `exports`, named in the edge's `kinds`), `masters-link` (a pointer into the owning model's ARCH-018 mastership register, never a free restatement of mastership as graph data), and `deprecated-in-favor-of` (the ARCH-002 successor pointer on a deprecated model). The seed exercises two of the four (`composes` and `references`); `masters-link` and `deprecated-in-favor-of` are in the vocabulary but not drawn in this minimal graph.
+The edge vocabulary is closed and exactly four types: `composes` (a Landscape orchestrates a Core model by reference, never by inclusion, per an ARCH-016 mechanism named in `compositional_role`), `references` (a model refers to kinds declared in the target's `exports`, named in the edge's `kinds`), `masters-link` (a pointer into the owning model's ARCH-018 mastership register, never a free restatement of mastership as graph data), and `deprecated-in-favor-of` (the ARCH-002 successor pointer on a deprecated model). The graph exercises two of the four (`composes` and `references`); `masters-link` and `deprecated-in-favor-of` are in the vocabulary but not drawn in this graph.
 
 ## How to register a new model
 
@@ -220,7 +241,7 @@ No deferred item accrues normative weight before its trigger fires. Navigation i
 | Repository or standard | Relationship |
 |---|---|
 | [ver-cy/elmm](https://github.com/ver-cy/elmm) | The specification. This repository is the running instance of the ELMM profile: the schemas here are vendored from it, and its SHALL text is the behavior contract the resolver and CI implement. |
-| [ver-cy/plmm](https://github.com/ver-cy/plmm) | The Product Landscape Meta-Model, the single Landscape in the seed. It is registered here as `vercy.plmm`; it composes AISMM and references APMM. |
+| [ver-cy/plmm](https://github.com/ver-cy/plmm) | The Product Landscape Meta-Model, the single governed Landscape (`deploy.portfolio` is an illustrative instance). It is registered here as `vercy.plmm`; it composes AISMM and references APMM, OUMM and CollMM. |
 | [ver-cy/world-models](https://github.com/ver-cy/world-models) | The neutral catalogue of meta-model cards. Any of its models can register here as a Core model by adding one entry file and its edges; that path is the point of the zero-change registration guarantee. |
 | [ver-cy/meta-universe](https://github.com/ver-cy/meta-universe) | The Meta-Universe standard, the substrate. Every mechanism this registry relies on is bound by reference to it (ARCH-002 versioning, ARCH-003 identity, ARCH-009 fingerprint, ARCH-014 policy, ARCH-016 composition, ARCH-017 traversal, ARCH-018 mastership, CORE-009 and CORE-012 projection, V0 to V5 gates, FED-013 discovery). The registry adds no parallel machinery; it profiles the upstream `entry.schema.json` and lets the MMDG edge record be the one genuinely new artifact. |
 
