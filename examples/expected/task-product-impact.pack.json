@@ -34,15 +34,15 @@
       "tokens": 130
     },
     {
-      "model_id": "vercy.collmm",
-      "anchor": "collmm.collective",
+      "model_id": "vercy.collective",
+      "anchor": "collective.collective",
       "form": "summary",
-      "content": "Summary projection anchored on collmm.collective. Purpose: Core meta-model for the Collective as one canonical primitive: a team or standing body that holds members, member roles and a mandate and builds products. It sits between the person and the organizational unit, binding member seats to OUMM established-positions and the parent unit to an OUMM org-unit. Exported kinds: collective, membership, member-role, collective-mandate. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
-      "provenance": "Projected from vercy.collmm 0.1.0 (mufp:c0116ec7a91b5d24), source ref unspecified, registry uncommitted.",
-      "tokens": 140
+      "content": "Summary projection anchored on collective.collective. Purpose: The canonical Collective Meta-Model: a vendor-neutral model for organizational units, product and project teams, communities and governance bodies in matrix organizations, where composition, membership, authority, accountability, funding and work allocation form independent graphs. It references people, organizations, products and projects across integration boundaries rather than defining them. Exported kinds: collective, membership, role-definition, position, assignment, mandate, authority-grant, work-item. Identifiers plus a short summary under the just-in-time dereference rule; dereference any identifier for the full projection.",
+      "provenance": "Projected from vercy.collective 0.2.0 (mufp:cb346c3d019a37ef), source ref v0.2.0, registry uncommitted.",
+      "tokens": 176
     }
   ],
-  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role, oumm.org-unit, collmm.collective as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 614 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
+  "coverage_statement": "Covers plmm.product, aismm.software-product, apmm.role, oumm.org-unit, collective.collective as summary projections under the just-in-time dereference rule (v0.1 emits no full content: sync is git pull and members carry identifiers plus short summaries). Budget used 650 of 8000 tokens; no degradation occurred. observed_at is the caller-supplied stamp (deterministic, no wall clock); no staleness computed against sync_contract freshness in v0.1. Nothing else is reachable from the seed set along composes or references edges.",
   "version_pins": [
     {
       "id": "vercy.plmm",
@@ -65,9 +65,9 @@
       "semantic_fingerprint": "mufp:b7f4e2a10c93d856"
     },
     {
-      "id": "vercy.collmm",
-      "version": "0.1.0",
-      "semantic_fingerprint": "mufp:c0116ec7a91b5d24"
+      "id": "vercy.collective",
+      "version": "0.2.0",
+      "semantic_fingerprint": "mufp:cb346c3d019a37ef"
     }
   ],
   "provenance": {
@@ -84,15 +84,15 @@
       "walk: composes vercy.plmm -> orkestron.aismm (kinds software-product, entity)",
       "walk: references vercy.plmm -> vercy.apmm (kinds role, task)",
       "walk: references vercy.plmm -> vercy.oumm (kinds org-unit)",
-      "walk: references vercy.plmm -> vercy.collmm (kinds collective)",
-      "walk: references vercy.collmm -> vercy.oumm (kinds org-unit)",
-      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm, vercy.oumm, vercy.collmm",
+      "walk: references vercy.plmm -> vercy.collective (kinds collective)",
+      "walk: references vercy.collective -> vercy.oumm (kinds org-unit)",
+      "resolution closure: vercy.plmm, orkestron.aismm, vercy.apmm, vercy.oumm, vercy.collective",
       "mvs: vercy.plmm no participating minimum, registered 0.2.0 -> 0.2.0",
       "mvs: orkestron.aismm max declared minimum 3.1.0, registered 3.1.0 -> 3.1.0",
       "mvs: vercy.apmm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
       "mvs: vercy.oumm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
-      "mvs: vercy.collmm max declared minimum 0.1.0, registered 0.1.0 -> 0.1.0",
-      "budget: 614 of 8000 tokens"
+      "mvs: vercy.collective max declared minimum 0.2.0, registered 0.2.0 -> 0.2.0",
+      "budget: 650 of 8000 tokens"
     ]
   },
   "observed_at": "2026-08-09T10:15:00Z",

@@ -5,7 +5,10 @@
     "edge_type": "composes",
     "declared_min": "3.1.0",
     "compositional_role": "R2",
-    "kinds": ["software-product", "entity"],
+    "kinds": [
+      "software-product",
+      "entity"
+    ],
     "fingerprint_at_registration": "mufp:9f2c47d1a83e50b6",
     "declared_by": "vercy.plmm",
     "observed_at": "2026-08-10T00:00:00Z",
@@ -17,7 +20,10 @@
     "edge_type": "references",
     "declared_min": "0.1.0",
     "compositional_role": "R4",
-    "kinds": ["role", "task"],
+    "kinds": [
+      "role",
+      "task"
+    ],
     "fingerprint_at_registration": "mufp:4b8e21c9d05f7a36",
     "declared_by": "vercy.plmm",
     "observed_at": "2026-08-10T00:00:00Z",
@@ -29,7 +35,9 @@
     "edge_type": "references",
     "declared_min": "0.1.0",
     "compositional_role": "R4",
-    "kinds": ["org-unit"],
+    "kinds": [
+      "org-unit"
+    ],
     "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
     "declared_by": "vercy.plmm",
     "observed_at": "2026-08-10T12:00:00Z",
@@ -41,7 +49,10 @@
     "edge_type": "references",
     "declared_min": "0.1.0",
     "compositional_role": "R4",
-    "kinds": ["role", "knowledge-item"],
+    "kinds": [
+      "role",
+      "knowledge-item"
+    ],
     "fingerprint_at_registration": "mufp:4b8e21c9d05f7a36",
     "declared_by": "vercy.ccmm",
     "observed_at": "2026-08-10T12:00:00Z",
@@ -53,7 +64,9 @@
     "edge_type": "references",
     "declared_min": "0.1.0",
     "compositional_role": "R4",
-    "kinds": ["org-unit"],
+    "kinds": [
+      "org-unit"
+    ],
     "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
     "declared_by": "vercy.ccmm",
     "observed_at": "2026-08-10T12:00:00Z",
@@ -65,7 +78,10 @@
     "edge_type": "composes",
     "declared_min": "0.1.0",
     "compositional_role": "R2",
-    "kinds": ["software-product", "entity"],
+    "kinds": [
+      "software-product",
+      "entity"
+    ],
     "fingerprint_at_registration": "mufp:de91073d0c7a5b46",
     "declared_by": "deploy.portfolio",
     "observed_at": "2026-08-10T12:00:00Z",
@@ -77,34 +93,40 @@
     "edge_type": "references",
     "declared_min": "0.1.0",
     "compositional_role": "R4",
-    "kinds": ["org-unit"],
+    "kinds": [
+      "org-unit"
+    ],
     "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
     "declared_by": "deploy.portfolio",
     "observed_at": "2026-08-10T12:00:00Z",
     "note": "The deployment site's portfolio references the owning org-unit; each product entry names its owning oumm.org-unit id as a Finding in the Relationships layer. Reference only: OUMM stays independently owned and is not re-defined here."
   },
   {
-    "from": "vercy.collmm",
+    "from": "vercy.collective",
     "to": "vercy.oumm",
     "edge_type": "references",
     "declared_min": "0.1.0",
     "compositional_role": "R4",
-    "kinds": ["org-unit"],
+    "kinds": [
+      "org-unit"
+    ],
     "fingerprint_at_registration": "mufp:b7f4e2a10c93d856",
-    "declared_by": "vercy.collmm",
+    "declared_by": "vercy.collective",
     "observed_at": "2026-08-10T12:00:00Z",
-    "note": "CollMM's parent unit and member seats bind to OUMM: the parent unit is an org-unit and a member seat is an established-position. CollMM references the OUMM org-unit kind rather than re-defining it. This is its only edge whose target already exists; the person-referencing edge waits for the deferred Human node."
+    "note": "The Collective model relates to organizational units (its own world-models mapping resolves a collective of kind organizationalUnit to world.organizationalUnit). Here it references the governed OUMM org-unit kind for the parent unit and member seats, rather than re-defining organizational structure."
   },
   {
     "from": "vercy.plmm",
-    "to": "vercy.collmm",
+    "to": "vercy.collective",
     "edge_type": "references",
-    "declared_min": "0.1.0",
+    "declared_min": "0.2.0",
     "compositional_role": "R4",
-    "kinds": ["collective"],
-    "fingerprint_at_registration": "mufp:c0116ec7a91b5d24",
+    "kinds": [
+      "collective"
+    ],
+    "fingerprint_at_registration": "mufp:cb346c3d019a37ef",
     "declared_by": "vercy.plmm",
     "observed_at": "2026-08-10T12:00:00Z",
-    "note": "PLMM records which team builds each product by referencing the CollMM collective kind, closing Collective to AISMM at the portfolio grain. declared_min equals the collective min_version entry appended to plmm's requires; collective appears in collmm's exports (CI export coverage). Reference only: CollMM stays independently owned and is not re-defined."
+    "note": "PLMM records which team builds each product by referencing the canonical Collective Meta-Model (github.com/ver-cy/collective-meta-model) on the collective kind, closing Collective to product at the portfolio grain. Reference only: the Collective model stays sovereign and is not re-defined."
   }
 ]

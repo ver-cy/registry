@@ -1,0 +1,64 @@
+# Unified Model Registration Record: CMM (Collective Meta-Model)
+# Virtual path: registry/entries/vercy.collective.yaml
+#
+# Registers the EXISTING, canonical Collective Meta-Model, published at
+# github.com/ver-cy/collective-meta-model (v0.2.0, namespace collective, MMAS
+# A3, V2 validation). This registry node is the MMDG handle for that model; the
+# model itself is sovereign in its own repository. The model already maps to the
+# world-models organizations cluster (collective maps to world.organizationalUnit,
+# membership to world.employmentMembership, mandate to world.mandateCharter), so
+# it references the OUMM org-unit kind rather than re-defining organizational
+# structure. PLMM references collective to record which team builds each product,
+# closing Collective to product at the portfolio grain. Display alias CMM is the
+# model's own chosen alias (distinct from the live CCMM; no collision).
+# Identity is registry id plus CSN plus Namespace (ARCH-003); the semantic pin is
+# the Semantic Fingerprint (ARCH-009), never a byte hash.
+
+id: vercy.collective
+name: Collective Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: domain
+license: Apache-2.0
+access: public
+purpose: >-
+  The canonical Collective Meta-Model: a vendor-neutral model for organizational
+  units, product and project teams, communities and governance bodies in matrix
+  organizations, where composition, membership, authority, accountability,
+  funding and work allocation form independent graphs. It references people,
+  organizations, products and projects across integration boundaries rather than
+  defining them.
+registered: "2026-08-10"
+
+csn: collective
+primary_namespace: collective
+display_alias: CMM
+role: core
+version: "0.2.0"
+status: draft
+origin: internal
+fingerprint: "mufp:cb346c3d019a37ef"
+source:
+  repository: https://github.com/ver-cy/collective-meta-model
+  ref: v0.2.0
+steward: Vercy maintainers
+sync_contract:
+  mode: git
+  freshness: PT24H
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
+exports:
+  - collective
+  - membership
+  - role-definition
+  - position
+  - assignment
+  - mandate
+  - authority-grant
+  - work-item
+requires:
+  - id: vercy.oumm
+    kind: org-unit
+    min_version: "0.1.0"
