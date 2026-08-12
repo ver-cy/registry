@@ -9,7 +9,7 @@ One git registry of meta-models where each entry is both a registry record and a
 ## Reading order for humans
 
 1. [README.md](README.md): what the registry is, why the registry and the MMDG are one artifact, the directory tour, the four-record seed and its edges, how to register a model, how the resolver works, and the walking-skeleton scope.
-2. [entries/](entries/): the Model Registration Records. Read `orkestron.aismm.yaml` first (the reference Core model and the template every registrant matches), then `vercy.apmm.yaml`, `vercy.plmm.yaml`, and `vercy.elmm.yaml`.
+2. [entries/](entries/): the Model Registration Records. Read `vercy.aismm.yaml` first (the reference Core model and the template every registrant matches), then `vercy.apmm.yaml`, `vercy.plmm.yaml`, and `vercy.elmm.yaml`.
 3. [mmdg/edges.json](mmdg/edges.json): the two seed edges. Read each edge beside the two entries it connects.
 4. [schema/](schema/): the JSON Schemas (draft 2020-12), vendored from ver-cy/elmm. Read each schema beside the ELMM spec section that defines it.
 5. [examples/](examples/): the worked task. Read the task descriptor, then the walkthrough, then the generated fixtures the walkthrough points at.
@@ -44,7 +44,7 @@ One git registry of meta-models where each entry is both a registry record and a
 ## Traversal rules
 
 - **Entry point.** This file is the single entry point. Tools that walk the repository start here and follow the manifest.
-- **Identity.** Cross-model references carry a registry id and a version, or a Semantic Fingerprint. Registry ids are publisher-prefixed (`orkestron.aismm`, `vercy.plmm`). Acronyms (AISMM, PLMM, APMM, ELMM) are display aliases only.
+- **Identity.** Cross-model references carry a registry id and a version, or a Semantic Fingerprint. Registry ids are publisher-prefixed (`vercy.aismm`, `vercy.plmm`). Acronyms (AISMM, PLMM, APMM, ELMM) are display aliases only.
 - **Two class fields.** `role` (`core | landscape | kernel`) is the MMDG-normative field; the upstream `kind` is mapped from it (`core` to `domain`, `landscape` and `kernel` to `enterprise`) and is retained for upstream tooling. The edge field `compositional_role` binds to ARCH-016 roles R1 to R8 and is distinct from the node `role`.
 - **Edges.** The four edge types are `composes`, `references`, `masters-link`, `deprecated-in-favor-of`. `declared_min` is the sole resolver input under Minimal Version Selection; `version_range` is a publish-time V-gate predicate only. No `composes` or `references` edge leaves the kernel node.
 - **Snapshots.** A resolved composition is pinned by a Twin Composition Snapshot, `{id, version, semantic_fingerprint}` per resolved model. The fingerprint is the semantic pin; `edges_hash` and `source_ref` are non-semantic transport-integrity fields.

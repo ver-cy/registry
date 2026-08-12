@@ -9797,18 +9797,6 @@
       "role": "R4"
     },
     {
-      "cluster": [
-        "knowledge-information"
-      ],
-      "industry": [
-        "foundation-semantics",
-        "software-devops"
-      ],
-      "name": "Software Meta-Model",
-      "origin": "internal",
-      "ref": "orkestron.aismm"
-    },
-    {
       "cluster": [],
       "group": "Music, Audio & Timeline Media",
       "industry": [
@@ -13523,6 +13511,18 @@
       "origin": "external",
       "ref": "vdml",
       "role": "R4"
+    },
+    {
+      "cluster": [
+        "knowledge-information"
+      ],
+      "industry": [
+        "foundation-semantics",
+        "software-devops"
+      ],
+      "name": "Software Meta-Model",
+      "origin": "internal",
+      "ref": "vercy.aismm"
     },
     {
       "cluster": [

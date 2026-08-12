@@ -1,7 +1,7 @@
 [
   {
     "from": "vercy.plmm",
-    "to": "orkestron.aismm",
+    "to": "vercy.aismm",
     "edge_type": "composes",
     "declared_min": "3.1.0",
     "compositional_role": "R2",

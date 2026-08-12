@@ -1,5 +1,5 @@
 {
-  "snapshot_id": "tcs-50ac11923fc94d8c",
+  "snapshot_id": "tcs-068a0d6d496b1ef8",
   "resolved": [
     {
       "id": "vercy.plmm",
@@ -8,7 +8,7 @@
       "source_ref": "v0.2.0"
     },
     {
-      "id": "orkestron.aismm",
+      "id": "vercy.aismm",
       "version": "3.1.0",
       "semantic_fingerprint": "mufp:9f2c47d1a83e50b6",
       "source_ref": "v3.1.0"
@@ -32,7 +32,7 @@
       "source_ref": "v0.2.0"
     }
   ],
-  "edges_hash": "sha256:c765ff33a1fa6844e79ff04909cdb390b8b2450ac206304144c6153a2a8149db",
+  "edges_hash": "sha256:59d5024adfe500ca312bdeaab2b16f3db901e9cebbe2ad935ffd80aa626775ef",
   "created_at": "2026-08-09T10:15:00Z",
   "task_ref": "task-product-impact-0001"
 }
