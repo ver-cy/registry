@@ -6,7 +6,7 @@
 # example of the instance-registration pattern, not a live model.
 #
 # One file, two schemas: the Meta-Universe registry entry fields plus the MMDG
-# node profile fields (see orkestron.aismm.yaml header for the convergence
+# node profile fields (see vercy.aismm.yaml header for the convergence
 # rationale and the change-request track). role is the MMDG-normative field;
 # role landscape maps to kind enterprise.
 #

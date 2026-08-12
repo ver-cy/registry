@@ -20,7 +20,7 @@ What this repository is **not**: it is not a copy of any model. Registration is 
 
 Everything above describes the internal meta-models: the MMDG nodes, few and governed. As of v0.2 the repository is a unified registry with a second entry class alongside them, and two facet axes that classify both classes the same way.
 
-**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are ten of them: seven governed meta-models (`orkestron.aismm`, `vercy.apmm`, `vercy.ccmm`, `vercy.oumm`, `vercy.collmm`, `vercy.plmm`, `vercy.elmm`) and three illustrative tenant instance nodes registered the same way (`acme.fhir`, `deploy.aismm-product`, `deploy.portfolio`). An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by the external-to-internal transform (workstream B6), described below. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
+**The two entry classes.** An **internal meta-model** is an MMDG node: a governed, versioned model with one YAML record in `entries/`, joined to the others by typed edges. There are ten of them: seven governed meta-models (`vercy.aismm`, `vercy.apmm`, `vercy.ccmm`, `vercy.oumm`, `vercy.collmm`, `vercy.plmm`, `vercy.elmm`) and three illustrative tenant instance nodes registered the same way (`acme.fhir`, `deploy.aismm-product`, `deploy.portfolio`). An **external standard** is a discoverable reference: one row in `external/external-standards.csv`, one of 1180 reference standards the world already publishes. The difference is not cosmetic. Internal nodes are in the graph; external standards are not. An external standard is a citation the registry can find and facet, never a node the resolver walks. It becomes an MMDG node only when it is instantiated by the external-to-internal transform (workstream B6), described below. Until then the two classes share the facet axes but nothing else: external standards carry no `role`, no `exports`, no `requires`, no edges, and the resolver never sees them.
 
 **The two axes are orthogonal, and both apply to both classes.** They answer different questions:
 
@@ -142,7 +142,7 @@ The registry registers exactly what exists, not the fourteen Core models and ele
 
 | Entry | `role` | `kind` | Version | Access | Origin | What it demonstrates |
 |---|---|---|---|---|---|---|
-| `entries/orkestron.aismm.yaml` | core | domain | 3.1.0 | public | external | The reference Core model, registered from an outside publisher at `github.com/orkestron-ai/software-meta-model`. Ships the template every registrant matches. |
+| `entries/vercy.aismm.yaml` | core | domain | 3.1.0 | public | external | The reference Core model, registered from an outside publisher at `github.com/ver-cy/software-meta-model`. Ships the template every registrant matches. |
 | `entries/vercy.apmm.yaml` | core | domain | 0.1.0 | public | internal | The second Core model, proving the non-software case. Its substance derives from a restricted-access source specification recorded as provenance, with no link; exactly one node exists for it. |
 | `entries/vercy.ccmm.yaml` | core | domain | 0.1.0 | public | internal | The Context-Chain Core model: the layered context an agent operates inside. References APMM (role, knowledge-item) and OUMM (org-unit) rather than re-defining them. |
 | `entries/vercy.oumm.yaml` | core | domain | 0.1.0 | public | internal | The org-unit primitive that other models resolve to rather than re-define. The shared reference target: PLMM, CCMM, CollMM and `deploy.portfolio` all reference its `org-unit` kind. |
@@ -165,12 +165,12 @@ The seven governed meta-models and the three illustrative tenant instances are w
                         from graph edges.
 
   Level 2 (landscape)   vercy.plmm                    deploy.portfolio
-                          composes ->  orkestron.aismm   composes ->  deploy.aismm-product
+                          composes ->  vercy.aismm   composes ->  deploy.aismm-product
                           references -> vercy.apmm        references -> vercy.oumm
                           references -> vercy.oumm
                           references -> vercy.collmm
 
-  Level 1 (core)        orkestron.aismm   vercy.apmm   vercy.oumm   deploy.aismm-product
+  Level 1 (core)        vercy.aismm   vercy.apmm   vercy.oumm   deploy.aismm-product
                         vercy.ccmm  references -> vercy.apmm, vercy.oumm
                         vercy.collmm references -> vercy.oumm
                         acme.fhir   (isolated node, empty exports, no edges)
@@ -180,7 +180,7 @@ The seven governed meta-models and the three illustrative tenant instances are w
   re-defining it.
 
   Nine edges in mmdg/edges.json:
-    1. vercy.plmm       composes    orkestron.aismm       (R2, declared_min 3.1.0, kinds software-product, entity)
+    1. vercy.plmm       composes    vercy.aismm       (R2, declared_min 3.1.0, kinds software-product, entity)
     2. vercy.plmm       references  vercy.apmm            (R4, declared_min 0.1.0, kinds role, task)
     3. vercy.plmm       references  vercy.oumm            (R4, declared_min 0.1.0, kinds org-unit)
     4. vercy.plmm       references  vercy.collmm          (R4, declared_min 0.1.0, kinds collective)

@@ -2,7 +2,7 @@
 # Virtual path: registry/entries/vercy.elmm.yaml
 #
 # One file, two schemas: the Meta-Universe registry entry fields plus the
-# MMDG node profile fields (see orkestron.aismm.yaml header for the
+# MMDG node profile fields (see vercy.aismm.yaml header for the
 # convergence rationale and the change-request track). role is the
 # MMDG-normative field; role kernel maps to kind enterprise.
 #

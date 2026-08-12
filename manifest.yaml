@@ -201,7 +201,7 @@ kind_rules:
 traversal_rules:
   - "Entry point. BOOTSTRAP.md is the single entry point; this manifest lists what
     lives where. Files not listed are non-normative."
-  - "Identity. Registry ids are publisher-prefixed (for example orkestron.aismm,
+  - "Identity. Registry ids are publisher-prefixed (for example vercy.aismm,
     vercy.plmm). Acronyms are display aliases only. Cross-model references carry a
     model id and a version, or a Semantic Fingerprint."
   - "Edges. The edge vocabulary is closed and kernel-owned: composes, references,

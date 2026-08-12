@@ -6,15 +6,15 @@
 # instance-registration pattern, not a live model.
 #
 # One file, two schemas: the Meta-Universe registry entry fields plus the MMDG
-# node profile fields (see orkestron.aismm.yaml header for the convergence
+# node profile fields (see vercy.aismm.yaml header for the convergence
 # rationale and the change-request track). role is the MMDG-normative field;
 # role core maps to kind domain.
 #
-# This node conforms to the reference Core model orkestron.aismm at 3.1.0: it
+# This node conforms to the reference Core model vercy.aismm at 3.1.0: it
 # exports the AISMM product kinds it realizes (software-product, entity) so a
 # Landscape (deploy.portfolio) can name it as a composes target. Nothing is
-# declared out of orkestron.aismm here; this node conforms to it and stays
-# internally owned (orkestron.aismm keeps requires []).
+# declared out of vercy.aismm here; this node conforms to it and stays
+# internally owned (vercy.aismm keeps requires []).
 
 # Upstream registry entry fields (entry.schema.json)
 id: deploy.aismm-product
@@ -26,7 +26,7 @@ license: Apache-2.0
 access: public
 purpose: >-
   Illustrative instance of the reference Core model for a single software
-  product at a deployment site. It conforms to orkestron.aismm and exports the
+  product at a deployment site. It conforms to vercy.aismm and exports the
   product kinds a portfolio composes. An example of the instance-registration
   pattern, not a live model.
 registered: "2026-08-10"
@@ -59,15 +59,15 @@ exports:
   - entity
 requires: []
 # Upstream conformance block: this instance conforms to the reference Core model
-# orkestron.aismm at 3.1.0 (compositional_role R2). Recorded as conformance, not
+# vercy.aismm at 3.1.0 (compositional_role R2). Recorded as conformance, not
 # derived_from: derived_from is the external-to-internal lineage head, and
-# orkestron.aismm is an internal registered Core model this product conforms to.
+# vercy.aismm is an internal registered Core model this product conforms to.
 conformance:
-  conforms_to: orkestron.aismm
+  conforms_to: vercy.aismm
   version: "3.1.0"
   compositional_role: R2
   note: >-
     Illustrative example instance. This product is modeled in AISMM and conforms
-    to orkestron.aismm at 3.1.0; it is registered so deploy.portfolio can
+    to vercy.aismm at 3.1.0; it is registered so deploy.portfolio can
     compose it (kinds software-product, entity) and close AISMM to PLMM at the
-    deployment site. Nothing is ever declared out of orkestron.aismm.
+    deployment site. Nothing is ever declared out of vercy.aismm.

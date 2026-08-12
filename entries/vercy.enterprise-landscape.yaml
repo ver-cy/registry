@@ -1,0 +1,97 @@
+# Unified Model Registration Record: Enterprise Landscape
+# Virtual path: registry/entries/vercy.enterprise-landscape.yaml
+#
+# One file, two schemas: the Meta-Universe registry entry fields plus the
+# MMDG node profile fields (see vercy.aismm.yaml header for the convergence
+# rationale). role is the MMDG-normative field; role landscape maps to kind
+# enterprise.
+#
+# The Enterprise Landscape is a Level-2 Landscape that composes the software
+# Core and the product Landscape around the enterprise as a whole: goals,
+# capabilities, value streams, operating model and transformation. It is the
+# neutral registration of the enterprise-model content developed with a
+# collaborator (source repository below). The name deliberately avoids the
+# EMM/AIEMM/ELMM homographs: ELMM is the thin Level-3 kernel, this node is a
+# populated Level-2 Landscape. Its own domain content (bundles, layers,
+# objects, relations) stays in the source model and is referenced, never
+# hosted by the kernel; federation, provenance, mastership and fingerprinting
+# are kernel concerns this node relies on rather than re-specifies.
+#
+# requires names one entry per referenced foreign kind, minimum versions
+# only: resolution is Minimal Version Selection. Each requires min_version
+# equals the declared_min of the corresponding edge in registry/mmdg/edges.json,
+# and every referenced kind appears in the target's exports. The organization
+# model (proposed neutral id vercy.omm) is a deliberate deferred reference: it
+# is not yet a registered node, so no edge or requires entry names it here
+# (an absent active member stays a known unresolved reference, never a shadow
+# owner). It is added when the organization model is published neutrally.
+
+# Upstream registry entry fields (entry.schema.json)
+id: vercy.enterprise-landscape
+name: Enterprise Landscape Meta-Model
+publisher: Vercy
+owner: Vercy
+kind: enterprise
+license: Apache-2.0
+access: public
+purpose: >-
+  Landscape meta-model for the enterprise as a whole. It composes the software
+  Core and the product Landscape by reference to describe goals, capabilities,
+  value streams, the operating model, enterprise processes and transformation,
+  and declares routing hints for resolution. Draft: the populated domain
+  content lives in the source model and is being aligned to the standard.
+registered: "2026-08-12"
+
+# MMDG node profile fields (mmdg-node.schema.json)
+csn: enterprise-landscape-meta-model
+primary_namespace: enterprise-landscape
+display_alias: Enterprise Landscape
+role: landscape
+version: "0.1.0"
+status: active
+origin: external
+fingerprint: "mufp:e5a7c1938d6b204f"
+source:
+  repository: https://github.com/konstantin74ai/AIEMM
+  ref: main
+steward: Vercy model stewards
+sync_contract:
+  mode: git
+  freshness: PT24H
+# Facet axes (v0.2). industry codes from facets/industry.yaml (vercy-industry),
+# cluster codes from facets/clusters.yaml. An enterprise-landscape kernel is a
+# foundation-and-semantics substrate; as a thing it composes and describes
+# organizations and their enterprise portfolios.
+industry:
+  - foundation-semantics
+cluster:
+  - organizations
+routing_hints:
+  - match_entities:
+      - enterprise-landscape.enterprise
+      - enterprise-landscape.value-stream
+      - enterprise-landscape.business-capability
+    match_purpose_keywords:
+      - enterprise
+      - operating model
+      - value stream
+      - enterprise architecture
+exports:
+  - enterprise
+  - value-stream
+  - business-capability
+  - operating-model
+  - enterprise-process
+  - transformation-initiative
+# One requires entry per referenced foreign kind. Each min_version equals the
+# declared_min of the matching edge in registry/mmdg/edges.json.
+requires:
+  - id: vercy.aismm
+    kind: entity
+    min_version: "3.1.0"
+  - id: vercy.plmm
+    kind: product
+    min_version: "0.2.0"
+  - id: vercy.plmm
+    kind: capability
+    min_version: "0.2.0"

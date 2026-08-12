@@ -30,7 +30,7 @@ The resolver matches the descriptor against the `routing_hints` declared by the 
 
 The resolver takes the transitive closure of `composes` and `references` edges out of the anchor set, per the ARCH-017 walk discipline extended across models. From `vercy.plmm`:
 
-- `vercy.plmm` **composes** `orkestron.aismm` (declared_min 3.1.0, R2, kinds software-product and entity). This is the software side.
+- `vercy.plmm` **composes** `vercy.aismm` (declared_min 3.1.0, R2, kinds software-product and entity). This is the software side.
 - `vercy.plmm` **references** `vercy.apmm` (declared_min 0.1.0, R4, kinds role and task). This is the staffing side, reached without the task naming APMM.
 
 Nothing further is reachable. AISMM and APMM declare empty `requires`; the kernel `vercy.elmm` holds no outgoing edges. The seed draws no `deprecated-in-favor-of` or `masters-link` edge, so no successor pointer or mastership pointer participates in the walk.
@@ -42,7 +42,7 @@ For each reached model major identity the resolver takes the maximum of the decl
 | Model | Declared minimums | Resolved |
 |---|---|---|
 | `vercy.plmm` | anchor, no participating incoming edge | 0.2.0 (registered version) |
-| `orkestron.aismm` | 3.1.0 (edge from vercy.plmm) | 3.1.0 |
+| `vercy.aismm` | 3.1.0 (edge from vercy.plmm) | 3.1.0 |
 | `vercy.apmm` | 0.1.0 (edge from vercy.plmm) | 0.1.0 |
 
 No solver runs; the outcome is deterministic and identical on every machine. Declared ranges played no part: any upper bound was already checked at publish time by the CI V-gates and is never a resolver input. Major versions are distinct identities, so had two majors of a shared Core model been reachable, each would resolve independently rather than competing for one slot.
@@ -62,7 +62,7 @@ The resolver builds one member projection per anchored Meta-Object, each satisfy
 - `task_ref`: `task-product-impact-0001`, carried from the descriptor.
 - `member_projections`: an ordered array of members, each with `model_id`, a single `anchor` (the namespace-qualified CSN of the one Meta-Object it projects), a `form` of `full` or `summary`, the projected `content`, per-member `provenance` (the model version, its Semantic Fingerprint, and the pinned ref), and a `tokens` estimate. The expected resolution yields three members, each delivered in `summary` form under the just-in-time dereference rule (identifiers plus short summaries, with detail pulled on demand): `plmm.product` (the primary anchor), `aismm.software-product` (the software the product depends on), and `apmm.role` (the staffing roles that own the affected cross-product processes). The v0.1 resolver emits every member in summary form; `full` form is reserved for a future capability that projects content in depth when the budget and the minimal-sufficient rule call for it.
 - `coverage_statement`: what the pack covers, what was delivered in summary form, whether any source was stale, and whether the budget forced degradation.
-- `version_pins`: one pin per resolved model (`vercy.plmm` 0.2.0, `orkestron.aismm` 3.1.0, `vercy.apmm` 0.1.0), each with its Semantic Fingerprint. The pins are the result of Minimal Version Selection; the fingerprint is the semantic pin, never a byte hash.
+- `version_pins`: one pin per resolved model (`vercy.plmm` 0.2.0, `vercy.aismm` 3.1.0, `vercy.apmm` 0.1.0), each with its Semantic Fingerprint. The pins are the result of Minimal Version Selection; the fingerprint is the semantic pin, never a byte hash.
 - `provenance`: `registry_ref` (the commit read), `resolver` (implementation and version), and `routing_log` (the hint matches, the edge walk, and the version selection, one line each).
 - `observed_at`: from `--observed-at`.
 - `max_tokens`: 8000. If the assembled members exceeded it, members would degrade to a terser identifier-plus-summary form and the drop would be recorded in `coverage_statement`; that is the entire degradation rule in v0.1.
@@ -76,7 +76,7 @@ The pack is read-only. Any agent-initiated mutation would leave through the prop
 `expected/task-product-impact.snapshot.json` validates against `schema/twin-snapshot.schema.json`. Its shape:
 
 - `snapshot_id`: derived deterministically by hashing the resolved set with the edges digest and the task reference. Never random, never reused.
-- `resolved`: one entry per resolved model major identity (`vercy.plmm` 0.2.0, `orkestron.aismm` 3.1.0, `vercy.apmm` 0.1.0), each pinning `id`, `version`, and `semantic_fingerprint`, and optionally recording `source_ref` as the pinned ref.
+- `resolved`: one entry per resolved model major identity (`vercy.plmm` 0.2.0, `vercy.aismm` 3.1.0, `vercy.apmm` 0.1.0), each pinning `id`, `version`, and `semantic_fingerprint`, and optionally recording `source_ref` as the pinned ref.
 - `edges_hash`: `"sha256:"` followed by the SHA-256 of the canonicalized `mmdg/edges.json`. A clearly labeled non-semantic transport-integrity field, never a semantic pin.
 - `created_at`: from `--observed-at`.
 - `task_ref`: `task-product-impact-0001`.

@@ -1,5 +1,5 @@
 # Unified Model Registration Record: AISMM
-# Virtual path: registry/entries/orkestron.aismm.yaml
+# Virtual path: registry/entries/vercy.aismm.yaml
 #
 # One file, two schemas. This record is the superset that carries the
 # Meta-Universe registry entry fields (entry.schema.json: id, name,
@@ -33,10 +33,10 @@
 # form, never a byte hash.
 
 # Upstream registry entry fields (entry.schema.json)
-id: orkestron.aismm
+id: vercy.aismm
 name: Software Meta-Model
-publisher: orkestron-ai
-owner: orkestron-ai
+publisher: Vercy
+owner: Vercy
 kind: domain
 license: Apache-2.0
 access: public
@@ -56,9 +56,9 @@ status: active
 origin: external
 fingerprint: "mufp:9f2c47d1a83e50b6"
 source:
-  repository: https://github.com/orkestron-ai/software-meta-model
+  repository: https://github.com/ver-cy/software-meta-model
   ref: v3.1.0
-steward: AISMM maintainers
+steward: Vercy model stewards
 sync_contract:
   mode: git
   freshness: PT24H
