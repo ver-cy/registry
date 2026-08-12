@@ -13577,6 +13577,17 @@
       "industry": [
         "foundation-semantics"
       ],
+      "name": "Enterprise Landscape Meta-Model",
+      "origin": "internal",
+      "ref": "vercy.enterprise-landscape"
+    },
+    {
+      "cluster": [
+        "organizations"
+      ],
+      "industry": [
+        "foundation-semantics"
+      ],
       "name": "Org-Unit Meta-Model",
       "origin": "internal",
       "ref": "vercy.oumm"
@@ -14504,7 +14515,7 @@
   "facets": {
     "by_cluster": {
       "knowledge-information": 3,
-      "organizations": 6,
+      "organizations": 7,
       "people-groups": 1
     },
     "by_industry": {
@@ -14519,7 +14530,7 @@
       "education-skills": 24,
       "energy-utilities": 26,
       "financial-services": 65,
-      "foundation-semantics": 112,
+      "foundation-semantics": 113,
       "geospatial-temporal": 80,
       "government-public-sector": 57,
       "healthcare-life-sciences": 99,
@@ -14547,7 +14558,7 @@
     },
     "by_origin": {
       "external": 1180,
-      "internal": 10
+      "internal": 11
     },
     "by_role": {
       "R1": 9,
@@ -14563,7 +14574,7 @@
   "generated_from": "entries/*.yaml (internal) and external/external-standards.csv (external), faceted by facets/industry.yaml, facets/clusters.yaml, facets/compositional-roles.yaml and facets/link-types.yaml. Deterministic build (no timestamps): re-running yields byte-identical output.",
   "totals": {
     "external": 1180,
-    "internal": 10,
-    "total": 1190
+    "internal": 11,
+    "total": 1191
   }
 }

@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- The Enterprise Landscape as a registered Level-2 Landscape node, `vercy.enterprise-landscape` (`entries/vercy.enterprise-landscape.yaml`). It composes the software Core (`vercy.aismm`, entity) and the product Landscape (`vercy.plmm`, product and capability) by reference, with two `composes` edges in `mmdg/edges.json` (R2 to AISMM, R6 to PLMM). It is the neutral registration of enterprise-model content developed with a collaborator; the populated domain content stays in the source model and is referenced, never hosted. The name deliberately avoids the EMM / AIEMM / ELMM homographs: ELMM is the thin Level-3 kernel, this node is a populated Level-2 Landscape. The organization model (proposed neutral id `vercy.omm`) is a deferred reference, not yet registered, so no edge names it: an absent active member stays a known unresolved reference, never a shadow owner.
+- `ci/check_taint.py`, an eighth fail-closed admission check wired into `ci/run.py`, with the portable detector `ci/taint_gate.py`. It fails closed on any commercial coupling in a canonical-identity position (schema `$id` or title, the value of an id / model_id / csn / namespace / display_alias key, or a file or directory name under `registry/` or `schemas/`), while exempting free-text evidence and source-repository URLs. Neutrality is now guaranteed on the write path (ELMM-I39), not just by review.
+
+### Changed
+
+- Neutralized the AISMM node identity: `orkestron.aismm` becomes `vercy.aismm` (publisher and owner Vercy, home `github.com/ver-cy/software-meta-model`), removing commercial coupling from the open-standard registry. Graph-consistent across entries, edges, the index, the resolver fixtures and the walkthrough. The form `ver-cy.aismm` is not used: the `model_id` pattern forbids a hyphen in the publisher prefix, and every other node uses the `vercy.` prefix.
+
 ## [0.3.0] - 2026-08-10
 
 ### Added

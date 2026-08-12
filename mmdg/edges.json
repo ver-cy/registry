@@ -128,5 +128,34 @@
     "declared_by": "vercy.plmm",
     "observed_at": "2026-08-10T12:00:00Z",
     "note": "PLMM records which team builds each product by referencing the canonical Collective Meta-Model (github.com/ver-cy/collective-meta-model) on the collective kind, closing Collective to product at the portfolio grain. Reference only: the Collective model stays sovereign and is not re-defined."
+  },
+  {
+    "from": "vercy.enterprise-landscape",
+    "to": "vercy.aismm",
+    "edge_type": "composes",
+    "declared_min": "3.1.0",
+    "compositional_role": "R2",
+    "kinds": [
+      "entity"
+    ],
+    "fingerprint_at_registration": "mufp:9f2c47d1a83e50b6",
+    "declared_by": "vercy.enterprise-landscape",
+    "observed_at": "2026-08-12T00:00:00Z",
+    "note": "The Enterprise Landscape orchestrates the software Core by reference, never by inclusion. declared_min equals the entity min_version in this node requires; entity appears in vercy.aismm exports (CI export coverage). Any upper bound is a publish-time V-gate predicate, not a resolver input."
+  },
+  {
+    "from": "vercy.enterprise-landscape",
+    "to": "vercy.plmm",
+    "edge_type": "composes",
+    "declared_min": "0.2.0",
+    "compositional_role": "R6",
+    "kinds": [
+      "product",
+      "capability"
+    ],
+    "fingerprint_at_registration": "mufp:c31d75e8a92b40f6",
+    "declared_by": "vercy.enterprise-landscape",
+    "observed_at": "2026-08-12T00:00:00Z",
+    "note": "Landscape-composes-Landscape (ARCH-016 R6): the product Landscape participates as an aggregate substructure of the enterprise landscape. composes stays acyclic (enterprise-landscape composes plmm and aismm; plmm composes aismm; no cycle). declared_min equals the product and capability min_version entries in this node requires; both kinds appear in vercy.plmm exports."
   }
 ]

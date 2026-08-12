@@ -77,7 +77,7 @@
       "registry_ref: uncommitted",
       "observed_at: 2026-08-09T10:15:00Z",
       "task_ref: task-product-impact-0001",
-      "loaded 10 records and 9 edges",
+      "loaded 11 records and 11 edges",
       "route: plmm.product -> vercy.plmm (primary_namespace plmm, exports product)",
       "route: aismm.software-product -> vercy.aismm (primary_namespace aismm, exports software-product)",
       "seed set: vercy.plmm, vercy.aismm",
@@ -102,7 +102,8 @@
     "deploy.aismm-product: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
     "deploy.portfolio: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
     "vercy.ccmm: not reachable from the routed seeds along composes or references edges (minimal-sufficient)",
-    "vercy.elmm: kernel node, not task content; the kernel declares no outgoing edges (least privilege)"
+    "vercy.elmm: kernel node, not task content; the kernel declares no outgoing edges (least privilege)",
+    "vercy.enterprise-landscape: not reachable from the routed seeds along composes or references edges (minimal-sufficient)"
   ],
   "requester_identity": "agent:reference-runtime",
   "purpose": "Assess the change impact of a product incident across software and staffing: identify the software entities the affected product depends on and the staffing roles that own the affected cross-product processes."

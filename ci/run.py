@@ -10,6 +10,7 @@ Runs, in order:
     check_facets         facet vocabulary and generated-artifact integrity (ARCH-017)
     check_instantiations B6 external-to-internal transform integrity (ARCH-014/016/018, IC-1)
     check_conventions    scaffold-convention integrity (S1 header + no-date rule, S2)
+    check_taint          canonical-identity neutrality, no commercial coupling (ELMM-I39)
 
 The first four are the walking-skeleton kernel checks. check_facets is the
 unified-registry extension: it guards the two orthogonal facet axes (cluster and
@@ -46,6 +47,7 @@ CHECKS = (
     "check_facets.py",
     "check_instantiations.py",
     "check_conventions.py",
+    "check_taint.py",
 )
 
 
