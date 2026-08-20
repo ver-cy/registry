@@ -1,5 +1,7 @@
 # The Vercy meta-model registry
 
+> **vNext direction:** Vercy is evolving into a format-independent catalogue of complete, versioned meta-model specifications with generated AI instructions and deployment templates. See [Vercy Registry vNext](docs/VERCY-REGISTRY-VNEXT.md).
+
 The single home where every meta-model registers as one node and declares its typed relationships to the others. One entry per model. One edge file for the graph between them. One resolver that turns a task into a bounded context pack. This repository is a walking skeleton in the sense of ver-cy/elmm: a git registry, a small edge file, one resolver script, one worked example, and CI checks, with no long-running services and a propose-only write path.
 
 - **The specification** lives in [ver-cy/elmm](https://github.com/ver-cy/elmm): the ELMM profile, the JSON Schemas, and the normative SHALL text. This repository is the running instance of that profile.
