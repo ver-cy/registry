@@ -1,0 +1,24 @@
+schema_version: 1.0.0
+id: example.task-context.analytics-extension
+version: 1.0.0
+namespace: example.analytics
+owner: Example Analytics Team
+target:
+  catalogue_id: example.task-context
+  version_range: ">=1.0.0 <2.0.0"
+  fingerprint: sf1:1234abcd
+operations:
+  - op: add
+    path: /structure/bundles/task-core/layers/analytics
+    precondition:
+      absent: true
+    value:
+      id: example.analytics.execution-metrics
+      name: Execution metrics
+      description: Adds governed task execution measurements.
+    reason: Extend without changing the base namespace.
+conflicts: []
+migration: [No migration is required for additive consumers.]
+validation: [patch namespace is owned by the patch publisher, base fingerprint matches]
+result_fingerprint: sf1:2345bcde
+
