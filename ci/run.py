@@ -48,6 +48,7 @@ CHECKS = (
     "check_instantiations.py",
     "check_conventions.py",
     "check_taint.py",
+    "check_catalogue_contracts.py",
 )
 
 

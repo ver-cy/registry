@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+id: vercy.profile.git-yaml
+version: 1.0.0
+name: Git plus YAML files
+representation: vercy.representation.yaml@1.0.0
+carrier: vercy.carrier.git-tree@1.0.0
+interfaces: [vercy.interface.filesystem@1.0.0, vercy.interface.git@1.0.0]
+template: https://ver.cy/templates/vercy.profile.git-yaml/1.0.0.tar.gz
+bootstrap:
+  agents_md_location: /AGENTS.md
+  discovery: Read AGENTS.md, fetch the pinned AI instruction, then traverse the manifest.
+validation: [validate all YAML, verify stable ids, run profile conformance]
+limitations: [concurrent writes require Git conflict resolution]
+

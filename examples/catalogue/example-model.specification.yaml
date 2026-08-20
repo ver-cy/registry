@@ -1,0 +1,116 @@
+schema_version: 1.0.0
+identity:
+  catalogue_id: example.task-context
+  csn: example.task-context
+  name: Task Context Meta-Model
+  aliases: [TCMM]
+  summary: Connected context required to understand and execute one task.
+  namespace: example.task
+  dimension: example.dimension
+  owner: Example Owner
+  publisher: Example Publisher
+  stewards: [example-role:steward]
+  license: Apache-2.0
+  lifecycle: active
+  specification_repository: https://example.org/task-context
+  fingerprint: sf1:1234abcd
+classification:
+  family: context-models
+  category: core
+  industries: [cross-industry]
+  domains: [work-management, ai-context]
+  tags: [task, context, agent]
+versioning:
+  version: 1.0.0
+  immutable_url: https://ver.cy/catalog/example.task-context/1.0.0/
+  latest_url: https://ver.cy/catalog/example.task-context/latest/
+  compatibility: same-major
+  history: []
+structure:
+  bundles:
+    - id: task-core
+      name: Task core
+      description: Groups the task definition and its execution context.
+      boundary: Does not master work-system records.
+      layers:
+        - id: definition
+          name: Definition
+          description: Groups findings that define the task.
+          findings:
+            - id: expected-outcome
+              name: Expected outcome
+              description: Defines the observable result that closes the task.
+              questions:
+                - id: q-outcome
+                  name: What must be true when the task is complete?
+                  description: The completion question.
+                  required: true
+                  answer_shape:
+                    type: statement
+                    minimum: 1
+              artifacts:
+                - id: acceptance-criteria
+                  name: Acceptance criteria
+                  description: Ordered, testable completion criteria.
+                  kind: checklist
+                  cardinality: serial
+                  serial_rules:
+                    prefix: AC-
+                    ordering: numeric ascending
+                  retention: retain with the task history
+                  sensitivity: inherit-from-task
+                  validation: [criteria are testable, identifiers are unique]
+                  representation_refs: [vercy.representation.yaml, vercy.representation.json]
+              master_bindings:
+                - dataset: task.acceptance-criteria
+                  system: example.work-system
+                  authority: authoritative
+                  direction: inbound
+                  freshness: PT5M
+service:
+  canon:
+    - relation: conforms-to
+      target: https://ver.cy/catalog/vercy.catalogue-contract/1.0.0/
+      version: 1.0.0
+  patches: []
+  standards: []
+  artifact_requirements:
+    - rule: serial artifacts use stable identifiers and append-only history
+  policies:
+    - relation: governed-by
+      target: https://ver.cy/policies/baseline/1.0.0.yaml
+  processes:
+    - relation: operated-by
+      target: https://ver.cy/process-profiles/managed/1.0.0.yaml
+  operations:
+    read: [fetch the pinned AI instruction, traverse bundles in declared order]
+    add: [validate identity and authority, append through the master system]
+    edit: [create a superseding version, never rewrite history]
+    delete: [deny physical deletion when retention applies, create a tombstone]
+    retire: [deprecate first, migrate dependants, retain the stable id]
+  roles:
+    - id: owner
+      name: Owner
+      responsibilities: [approve scope and policy, appoint the steward]
+    - id: steward
+      name: Steward
+      responsibilities: [maintain quality and freshness, review changes]
+  access:
+    - id: public-read
+      effect: allow
+      roles: [consumer]
+      actions: [read]
+      scopes: [model/**]
+      purpose: task execution
+      exceptions: [sensitive artifacts inherit source restrictions]
+  imports: []
+  exports: [task, expected-outcome, acceptance-criteria]
+  validation: [schema validation, unique stable ids, one master per dataset]
+  observability: [record observed_at and source freshness on every read]
+  security_privacy: [never store credentials, enforce purpose-bound access]
+  locales: [en]
+  agent_bootstrap:
+    agents_md: https://ver.cy/catalog/example.task-context/1.0.0/AGENTS.md
+    ai_instruction: https://ver.cy/catalog/example.task-context/1.0.0/ai.yaml
+  supported_deployment_profiles: [vercy.profile.git-yaml, vercy.profile.mongo-mcp]
+

@@ -1,0 +1,48 @@
+schema_version: 1.0.0
+dimension:
+  id: example.dimension
+  name: Example Dimension
+  version: 1.0.0
+  namespace_root: example
+owner:
+  party: Example Owner
+  accountable_roles: [dimension-owner, registry-steward, security-steward]
+meta_universe:
+  catalogue_id: vercy.meta-universe
+  version: 2.1.0
+  specification: https://ver.cy/catalog/vercy.meta-universe/2.1.0/
+namespace_authority:
+  allocation_policy: https://example.org/policies/namespaces
+  reserved: [example.system, example.registry]
+registries:
+  meta_models: https://example.org/registry/meta-models
+  meta_objects: https://example.org/registry/meta-objects
+  events: https://example.org/registry/events
+  contracts: https://example.org/registry/contracts
+  projections: https://example.org/registry/projections
+  participants: https://example.org/registry/participants
+  artifacts: https://example.org/registry/artifacts
+governance:
+  policies: [https://example.org/policies/baseline]
+  process_profile: https://ver.cy/process-profiles/managed/1.0.0.yaml
+  access: https://example.org/policies/access
+  delegation: https://example.org/policies/delegation
+  retention: https://example.org/policies/retention
+  incident: https://example.org/policies/incident
+discovery:
+  document: https://example.org/.well-known/vercy-dimension.json
+  federation_capabilities: [discovery, schema-exchange, projection-exchange]
+  identity_keys: [vault-ref:dimension-signing-key]
+mastership:
+  - registry: meta_models
+    master: example.registry-service
+conformance: https://example.org/conformance/1.0.0
+event_log: https://example.org/registry/events?scope=dimension
+agent_bootstrap:
+  agents_md: https://example.org/AGENTS.md
+  ai_instruction: https://example.org/ai.yaml
+succession:
+  responsible: Example Recovery Trustee
+  recovery_plan: https://example.org/policies/recovery
+  last_drill: "2026-08-01"
+
