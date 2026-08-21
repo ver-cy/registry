@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+id: vercy.representation.yaml
+version: 1.0.0
+axis: representation
+name: YAML tree representation
+capabilities: [human-readable, structured, comments]
+logical_mapping:
+  lossless: true
+  canonicalization: https://ver.cy/canonicalization/yaml-tree/1.0.0
+  node_mapping:
+    meta-model: document root
+    bundle: structure.bundles item
+    layer: layers item
+    finding: findings item
+    question: questions item
+    artifact: artifacts item
+read: [parse YAML 1.2, validate the logical specification schema, traverse declared arrays in order]
+query: [load the generated search index for cross-model queries]
+write: [write only through the selected carrier and interface process]
+validation: [round-trip to the canonical logical form is lossless]
+

@@ -16,6 +16,8 @@ This checklist is the acceptance gate for every complete meta-model specificatio
 - [ ] Every governed dataset has one master at its declared grain.
 - [ ] Required Questions have an answer shape and coverage state.
 - [ ] Serial Artifacts have deterministic naming, ordering and retention rules.
+- [ ] Artifact identity uses the declared master-system id, or UUIDv7/ULID when no master id exists.
+- [ ] Time is separate RFC 3339 metadata with seconds and an explicit timezone; a timestamp alone is never an identity.
 
 ## Operations and governance
 
@@ -31,7 +33,8 @@ This checklist is the acceptance gate for every complete meta-model specificatio
 - [ ] Validation suite and examples exist.
 - [ ] Freshness, synchronization and observability obligations exist.
 - [ ] Security, privacy, purpose, retention and recovery rules exist.
-- [ ] `AGENTS.md` and the immutable AI YAML URL cold-start successfully.
+- [ ] Root `AGENTS.md` and the immutable AI YAML URL cold-start successfully.
+- [ ] Database profiles expose an equivalent `readFirst` bootstrap record and a deterministic path to `AGENTS.md`.
 
 ## Portability
 
@@ -39,4 +42,3 @@ This checklist is the acceptance gate for every complete meta-model specificatio
 - [ ] Every supported representation declares a lossless mapping back to the logical form.
 - [ ] Every deployment profile declares carrier, interfaces and operational semantics.
 - [ ] At least one generated template passes its profile validation.
-

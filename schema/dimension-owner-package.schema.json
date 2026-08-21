@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ver.cy/schema/dimension-owner-package/1.0.0",
+  "title": "Vercy Dimension Owner Package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "dimension", "owner", "meta_universe", "namespace_authority", "registries", "governance", "discovery", "mastership", "agent_bootstrap", "succession"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "version", "namespace_root"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "namespace_root": { "type": "string", "minLength": 1 }
+      }
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["party", "accountable_roles"],
+      "properties": {
+        "party": { "type": "string", "minLength": 1 },
+        "accountable_roles": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "meta_universe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["catalogue_id", "version", "specification"],
+      "properties": {
+        "catalogue_id": { "type": "string" },
+        "version": { "type": "string" },
+        "specification": { "type": "string", "format": "uri" }
+      }
+    },
+    "namespace_authority": {
+      "type": "object",
+      "required": ["allocation_policy", "reserved"],
+      "properties": {
+        "allocation_policy": { "type": "string", "format": "uri" },
+        "reserved": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "registries": {
+      "type": "object",
+      "minProperties": 6,
+      "additionalProperties": { "type": "string", "format": "uri" },
+      "required": ["meta_models", "meta_objects", "events", "contracts", "projections", "participants"]
+    },
+    "governance": {
+      "type": "object",
+      "required": ["policies", "process_profile", "access", "delegation", "retention", "incident"],
+      "properties": {
+        "policies": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "process_profile": { "type": "string", "format": "uri" },
+        "access": { "type": "string", "format": "uri" },
+        "delegation": { "type": "string", "format": "uri" },
+        "retention": { "type": "string", "format": "uri" },
+        "incident": { "type": "string", "format": "uri" }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["document", "federation_capabilities", "identity_keys"],
+      "properties": {
+        "document": { "type": "string", "format": "uri" },
+        "federation_capabilities": { "type": "array", "items": { "type": "string" } },
+        "identity_keys": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "mastership": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["registry", "master"] } },
+    "conformance": { "type": "string", "format": "uri" },
+    "event_log": { "type": "string", "format": "uri" },
+    "agent_bootstrap": {
+      "type": "object",
+      "required": ["agents_md", "ai_instruction"],
+      "properties": {
+        "agents_md": { "type": "string", "format": "uri" },
+        "ai_instruction": { "type": "string", "format": "uri" }
+      }
+    },
+    "succession": {
+      "type": "object",
+      "required": ["responsible", "recovery_plan", "last_drill"],
+      "properties": {
+        "responsible": { "type": "string" },
+        "recovery_plan": { "type": "string", "format": "uri" },
+        "last_drill": { "type": "string", "format": "date" }
+      }
+    }
+  }
+}
+
