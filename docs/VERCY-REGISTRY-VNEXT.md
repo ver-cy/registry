@@ -1,7 +1,9 @@
 # Vercy Registry vNext
 
-Status: proposed architecture for implementation  
+Status: accepted architecture; implementation in progress
 Scope: Vercy as a registry and generator of format-independent meta-model specifications
+
+Product direction and implementation record: [`roadmap/VERCY-V02-DIRECTION.md`](roadmap/VERCY-V02-DIRECTION.md).
 
 ## 1. Product definition
 
@@ -234,4 +236,3 @@ The package declares authority; it does not own the content registered by sovere
 7. Production publication on `ver.cy`, compatibility redirects and migration documentation.
 
 The catalogue contracts are the source of truth. The website, AI instructions, indexes and templates are generated projections.
-
